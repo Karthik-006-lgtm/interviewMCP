@@ -4,17 +4,7 @@ AI-powered interview preparation platform built with MCP (Model Context Protocol
 
 ## Architecture
 
-```
-┌───────────┐     ┌────────────────┐     ┌────────────────┐     ┌────────────┐
-│  Frontend  │────▶│  Spring Boot   │────▶│  FastAPI AI    │     │ PostgreSQL │
-│  React+TS  │◀────│  Backend :8080 │◀────│  Service :8000 │     │    :5432   │
-└───────────┘     └────────────────┘     └────────────────┘     └────────────┘
-                         │
-                  ┌──────────────┐
-                  │  MCP Tools   │
-                  │  Runtime+API │
-                  └──────────────┘
-```
+![Interview Prep MCP Platform Architecture](Architecture%20diagram.png)
 
 | Service      | Tech Stack                        | Port |
 |--------------|-----------------------------------|------|
