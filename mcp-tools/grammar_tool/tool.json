@@ -1,0 +1,54 @@
+{
+  "name": "grammar_tool",
+  "description": "Checks grammar, tone, and pronunciation readiness for interview answers.",
+  "transport": "http",
+  "baseUrl": "http://localhost:8000",
+  "actions": [
+    {
+      "name": "score_answer",
+      "method": "POST",
+      "path": "/score_answer",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "expectedPoints": { "type": "string" },
+          "answerText": { "type": "string" },
+          "context": { "type": "string" }
+        },
+        "required": ["question", "expectedPoints", "answerText"]
+      }
+    },
+    {
+      "name": "grammar_check",
+      "method": "POST",
+      "path": "/grammar_check",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "answerText": {
+            "type": "string"
+          }
+        },
+        "required": ["answerText"]
+      }
+    },
+    {
+      "name": "coach_answer",
+      "method": "POST",
+      "path": "/coach_answer",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "answerDraft": { "type": "string" },
+          "coachingIntensity": { "type": "string", "enum": ["Beginner", "Balanced", "Advanced"] },
+          "silenceDetected": { "type": "boolean" },
+          "targetRole": { "type": "string" },
+          "companyName": { "type": "string" }
+        },
+        "required": ["question"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "name": "speech_tool",
+  "description": "Uploads interview audio clips for transcription, confidence scoring, fluency analysis, and pronunciation guidance.",
+  "transport": "http",
+  "baseUrl": "http://localhost:8080/api/interviews",
+  "auth": "Bearer JWT",
+  "actions": [
+    {
+      "name": "upload_audio_for_analysis",
+      "method": "POST",
+      "path": "/audio",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Recorded audio clip in WEBM, WAV, MP3, M4A, or OGG format."
+          },
+          "transcriptHint": {
+            "type": "string",
+            "description": "Optional browser speech-recognition transcript to improve fallback transcription."
+          },
+          "durationMs": {
+            "type": "integer",
+            "description": "Approximate recording duration in milliseconds."
+          }
+        },
+        "required": ["file"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "audioReference": { "type": "string" },
+          "transcript": { "type": "string" },
+          "confidenceScore": { "type": "number" },
+          "fluencyScore": { "type": "number" },
+          "clarityScore": { "type": "number" },
+          "emotionSignal": { "type": "string" },
+          "toneFeedback": { "type": "string" },
+          "pronunciationFeedback": { "type": "string" },
+          "fluencyFeedback": { "type": "string" },
+          "durationMs": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  ]
+}

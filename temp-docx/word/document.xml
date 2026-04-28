@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+    <w:p><w:r><w:t>Jane Doe</w:t></w:r></w:p>
+    <w:p><w:r><w:t>jane@example.com | 5551234567 | linkedin.com/in/janedoe</w:t></w:r></w:p>
+    <w:p><w:r><w:t>Experience</w:t></w:r></w:p>
+    <w:p><w:r><w:t>Built Java Spring React PostgreSQL services and improved analytics delivery.</w:t></w:r></w:p>
+    <w:p><w:r><w:t>Projects</w:t></w:r></w:p>
+    <w:p><w:r><w:t>Interview Prep MCP Platform using FastAPI Docker dashboards and structured reports.</w:t></w:r></w:p>
+    <w:p><w:r><w:t>Education</w:t></w:r></w:p>
+    <w:p><w:r><w:t>BTech in Computer Science</w:t></w:r></w:p>
+    <w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr>
+  </w:body>
+</w:document>

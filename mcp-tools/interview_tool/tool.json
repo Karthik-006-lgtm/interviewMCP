@@ -1,0 +1,63 @@
+{
+  "name": "interview_tool",
+  "description": "Creates interview sessions and submits answers for multi-signal evaluation.",
+  "transport": "http",
+  "baseUrl": "http://localhost:8080/api",
+  "auth": "Bearer JWT",
+  "actions": [
+    {
+      "name": "create_session",
+      "method": "POST",
+      "path": "/interviews/sessions",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "resumeId": { "type": "number" },
+          "companyId": { "type": "number" },
+          "selectedRoles": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "personalityProfile": { "type": "string" },
+          "technicalFocus": { "type": "string" },
+          "interviewerTone": { "type": "string" },
+          "coachingIntensity": { "type": "string", "enum": ["Beginner", "Balanced", "Advanced"] },
+          "liveCoachingEnabled": { "type": "boolean" },
+          "adaptiveDifficultyEnabled": { "type": "boolean" },
+          "realityMode": { "type": "string", "enum": ["Standard", "Interrupted panel", "Panel voices", "Offline reality lag"] },
+          "cameraEnabled": { "type": "boolean" }
+        },
+        "required": ["selectedRoles", "personalityProfile"]
+      }
+    },
+    {
+      "name": "get_session",
+      "method": "GET",
+      "path": "/interviews/sessions/{sessionId}"
+    },
+    {
+      "name": "submit_answer",
+      "method": "POST",
+      "path": "/interviews/questions/{questionId}/answer",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "answerText": { "type": "string" },
+          "audioReference": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "coach_answer",
+      "method": "POST",
+      "path": "/interviews/questions/{questionId}/coach",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "answerDraft": { "type": "string" },
+          "silenceDetected": { "type": "boolean" }
+        }
+      }
+    }
+  ]
+}

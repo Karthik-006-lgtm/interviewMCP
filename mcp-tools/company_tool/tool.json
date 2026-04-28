@@ -1,0 +1,66 @@
+{
+  "name": "company_tool",
+  "description": "Matches companies to target roles and retrieves detailed company context for interview preparation.",
+  "transport": "http",
+  "baseUrl": "http://localhost:8080/api",
+  "auth": "Bearer JWT",
+  "actions": [
+    {
+      "name": "match_companies",
+      "method": "POST",
+      "path": "/companies/match",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "selectedRoles": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["selectedRoles"]
+      }
+    },
+    {
+      "name": "search_companies",
+      "method": "GET",
+      "path": "/companies/search",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "selectedRoles": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "query": { "type": "string" },
+          "minMatchScore": { "type": "number" },
+          "companySize": { "type": "string", "enum": ["all", "small", "mid", "enterprise"] }
+        },
+        "required": ["selectedRoles"]
+      }
+    },
+    {
+      "name": "get_company",
+      "method": "GET",
+      "path": "/companies/{companyId}"
+    },
+    {
+      "name": "company_interview_context",
+      "method": "GET",
+      "path": "/companies/{companyId}",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "website": { "type": "string" },
+          "culture": { "type": "string" },
+          "interviewFocusAreas": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "whyUserMatches": { "type": "string" },
+          "matchScore": { "type": "number" }
+        }
+      }
+    }
+  ]
+}
