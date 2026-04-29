@@ -2,16 +2,19 @@
 
 AI-powered interview preparation platform built with MCP (Model Context Protocol), RAG, multi-agent orchestration, guardrails, and observability.
 
+🔗 **Live Demo:** [https://frontend-murex-seven-78.vercel.app](https://frontend-murex-seven-78.vercel.app)
+
 ## Architecture
 
 ![Interview Prep MCP Platform Architecture](architecture%20diagram.png)
 
-| Service      | Tech Stack                        | Port |
-|--------------|-----------------------------------|------|
-| frontend     | React 18, TypeScript, Tailwind    | 5173 |
-| backend      | Spring Boot 3, Java 21, JWT       | 8080 |
-| ai-service   | FastAPI, Python 3.11+, spaCy      | 8000 |
-| database     | PostgreSQL 16                     | 5432 |
+| Service      | Tech Stack                        | Deployed On |
+|--------------|-----------------------------------|-------------|
+| frontend     | React 18, TypeScript, Tailwind, Vite | Vercel |
+| backend      | Spring Boot 3, Java 21, JWT, JPA  | Railway |
+| ai-service   | FastAPI, Python 3.11, spaCy, scikit-learn, Whisper | Railway |
+| database     | PostgreSQL 16                     | Railway |
+| mcp-tools    | JSON-RPC 2.0 stdio runtime, tool manifests | Local / CLI |
 
 ## Key Concepts
 
