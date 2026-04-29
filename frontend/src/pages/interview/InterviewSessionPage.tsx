@@ -4,7 +4,6 @@ import { interviewApi } from "../../api/client";
 import { CameraPresencePanel } from "../../components/interview/CameraPresencePanel";
 import { SectionCard } from "../../components/ui/SectionCard";
 import { VoiceRecorder } from "../../components/ui/VoiceRecorder";
-import type { VideoRecordingResult } from "../../components/ui/VoiceRecorder";
 import {
   buildFollowUpPrompts,
   buildSimulationMilestone,
@@ -37,8 +36,6 @@ export function InterviewSessionPage() {
     nervousness: "Visual nervousness scoring is inactive."
   });
   const [submittingQuestionId, setSubmittingQuestionId] = useState<number | null>(null);
-  const [cameraActiveForQuestion, setCameraActiveForQuestion] = useState<string | null>(null);
-  const [videoRecordings, setVideoRecordings] = useState<Record<string, VideoRecordingResult>>({});
 
   useEffect(() => {
     if (!sessionId) {
@@ -217,12 +214,10 @@ export function InterviewSessionPage() {
     const audioReference = audioReferences[questionKey];
     const answerText = typedAnswer.trim() || transcriptAnswer.trim();
     const cameraModeEnabled = session?.cameraEnabled ?? false;
-    if (!answerText) {
+    if (!answerText && !audioReference) {
       setQuestionErrors((current) => ({
         ...current,
-        [questionKey]: audioReference
-          ? "No transcript was captured from your recording. Please type your answer in the text box above, then submit."
-          : "Type an answer or record an audio answer before submitting."
+        [questionKey]: "Type an answer or record an audio answer before submitting."
       }));
       return;
     }
@@ -232,7 +227,6 @@ export function InterviewSessionPage() {
     }
 
     setSubmittingQuestionId(questionId);
-    setCameraActiveForQuestion(null);
     setQuestionErrors((current) => ({ ...current, [questionKey]: "" }));
     try {
       if (lagDelayMs > 0) {
@@ -331,7 +325,7 @@ export function InterviewSessionPage() {
         </div>
         {session.cameraEnabled ? (
           <div className="mt-4 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <CameraPresencePanel enabled={session.cameraEnabled} active={cameraActiveForQuestion !== null} onSignalChange={setVisualSignals} />
+            <CameraPresencePanel enabled={session.cameraEnabled} onSignalChange={setVisualSignals} />
             <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">
               <p className="font-semibold text-cyan-200">Simulation engine</p>
               <ul className="mt-3 space-y-2 leading-7">
@@ -430,21 +424,6 @@ export function InterviewSessionPage() {
               />
               <div className="mt-4">
                 <VoiceRecorder
-                  cameraEnabled={session.cameraEnabled}
-                  onRecordingStart={() => {
-                    if (session.cameraEnabled) {
-                      setCameraActiveForQuestion(questionKey);
-                    }
-                  }}
-                  onRecordingStop={() => {
-                    setCameraActiveForQuestion(null);
-                  }}
-                  onVideoRecorded={(result) => {
-                    setVideoRecordings((current) => ({
-                      ...current,
-                      [questionKey]: result
-                    }));
-                  }}
                   onProcessingChange={(processing) =>
                     setAudioProcessing((current) => ({
                       ...current,
