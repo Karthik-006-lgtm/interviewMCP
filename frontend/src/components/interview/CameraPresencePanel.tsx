@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface FaceBoundsLike {
   width?: number;
@@ -24,6 +24,7 @@ declare global {
 
 interface CameraPresencePanelProps {
   enabled: boolean;
+  active: boolean;
   onSignalChange?: (signal: {
     presence: string;
     eyeContact: string;
@@ -32,47 +33,61 @@ interface CameraPresencePanelProps {
   }) => void;
 }
 
-export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresencePanelProps) {
+const OFF_SIGNALS = {
+  presence: "Voice-based emotion analysis only.",
+  eyeContact: "Camera activates when you start voice recording.",
+  confidence: "Visual confidence scoring is inactive.",
+  nervousness: "Visual nervousness scoring is inactive."
+};
+
+export function CameraPresencePanel({ enabled, active, onSignalChange }: CameraPresencePanelProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const monitorHandleRef = useRef<number | null>(null);
   const previousFaceWidthRef = useRef<number | null>(null);
   const missingFramesRef = useRef(0);
 
-  const [status, setStatus] = useState("Camera mode is off for this session.");
-  const [presenceSignal, setPresenceSignal] = useState("Voice-based emotion analysis only.");
-  const [eyeContactProxy, setEyeContactProxy] = useState("Enable camera mode to add visual presence checks.");
-  const [confidenceSignal, setConfidenceSignal] = useState("Visual confidence scoring is inactive.");
-  const [nervousnessSignal, setNervousnessSignal] = useState("Visual nervousness scoring is inactive.");
+  const [status, setStatus] = useState("Camera is on standby. It will activate when you start voice recording.");
+  const [presenceSignal, setPresenceSignal] = useState(OFF_SIGNALS.presence);
+  const [eyeContactProxy, setEyeContactProxy] = useState(OFF_SIGNALS.eyeContact);
+  const [confidenceSignal, setConfidenceSignal] = useState(OFF_SIGNALS.confidence);
+  const [nervousnessSignal, setNervousnessSignal] = useState(OFF_SIGNALS.nervousness);
 
-  const publishSignals = (
-    presence: string,
-    eyeContact: string,
-    confidence: string,
-    nervousness: string
-  ) => {
-    onSignalChange?.({
-      presence,
-      eyeContact,
-      confidence,
-      nervousness
-    });
-  };
+  const publishSignals = useCallback(
+    (presence: string, eyeContact: string, confidence: string, nervousness: string) => {
+      onSignalChange?.({ presence, eyeContact, confidence, nervousness });
+    },
+    [onSignalChange]
+  );
+
+  const stopCamera = useCallback(() => {
+    if (monitorHandleRef.current !== null) {
+      window.clearInterval(monitorHandleRef.current);
+      monitorHandleRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    previousFaceWidthRef.current = null;
+    missingFramesRef.current = 0;
+  }, []);
 
   useEffect(() => {
-    if (!enabled) {
+    if (!enabled || !active) {
       stopCamera();
-      setStatus("Camera mode is off for this session.");
-      setPresenceSignal("Voice-based emotion analysis only.");
-      setEyeContactProxy("Enable camera mode to add visual presence checks.");
-      setConfidenceSignal("Visual confidence scoring is inactive.");
-      setNervousnessSignal("Visual nervousness scoring is inactive.");
-      publishSignals(
-        "Voice-based emotion analysis only.",
-        "Enable camera mode to add visual presence checks.",
-        "Visual confidence scoring is inactive.",
-        "Visual nervousness scoring is inactive."
-      );
+      const standbyMsg = !enabled
+        ? "Camera mode is off for this session."
+        : "Camera is on standby. It will activate when you start voice recording.";
+      setStatus(standbyMsg);
+      setPresenceSignal(OFF_SIGNALS.presence);
+      setEyeContactProxy(OFF_SIGNALS.eyeContact);
+      setConfidenceSignal(OFF_SIGNALS.confidence);
+      setNervousnessSignal(OFF_SIGNALS.nervousness);
+      publishSignals(OFF_SIGNALS.presence, OFF_SIGNALS.eyeContact, OFF_SIGNALS.confidence, OFF_SIGNALS.nervousness);
       return;
     }
 
@@ -81,16 +96,6 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
     const startCamera = async () => {
       if (!navigator.mediaDevices?.getUserMedia) {
         setStatus("Camera capture is not supported in this browser.");
-        setPresenceSignal("Visual presence checks are unavailable.");
-        setEyeContactProxy("Voice emotion analysis remains active.");
-        setConfidenceSignal("Visual confidence scoring is unavailable.");
-        setNervousnessSignal("Visual nervousness scoring is unavailable.");
-        publishSignals(
-          "Visual presence checks are unavailable.",
-          "Voice emotion analysis remains active.",
-          "Visual confidence scoring is unavailable.",
-          "Visual nervousness scoring is unavailable."
-        );
         return;
       }
 
@@ -112,48 +117,41 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
           await videoRef.current.play().catch(() => undefined);
         }
 
-        setStatus("Camera feed is active for this interview.");
+        setStatus("Camera feed is active for this answer.");
 
         if (!window.FaceDetector) {
-          setPresenceSignal("Camera feed is active.");
-          setEyeContactProxy("This browser does not expose face detection, so visual analysis stays in readiness mode.");
-          setConfidenceSignal("Camera is on, but browser-side confidence scoring is limited.");
-          setNervousnessSignal("Use the voice scorecard for nervousness signals in this browser.");
-          publishSignals(
-            "Camera feed is active.",
-            "This browser does not expose face detection, so visual analysis stays in readiness mode.",
-            "Camera is on, but browser-side confidence scoring is limited.",
-            "Use the voice scorecard for nervousness signals in this browser."
-          );
+          const p = "Camera feed is active.";
+          const e = "This browser does not expose face detection, so visual analysis stays in readiness mode.";
+          const c = "Camera is on, but browser-side confidence scoring is limited.";
+          const n = "Use the voice scorecard for nervousness signals in this browser.";
+          setPresenceSignal(p);
+          setEyeContactProxy(e);
+          setConfidenceSignal(c);
+          setNervousnessSignal(n);
+          publishSignals(p, e, c, n);
           return;
         }
 
         const detector = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 1 });
         monitorHandleRef.current = window.setInterval(async () => {
-          if (!videoRef.current || videoRef.current.readyState < 2) {
-            return;
-          }
+          if (!videoRef.current || videoRef.current.readyState < 2) return;
 
           try {
             const faces = await detector.detect(videoRef.current);
             if (!faces.length) {
               missingFramesRef.current += 1;
-              setPresenceSignal("No face detected in frame.");
-              setEyeContactProxy("Move back into frame to strengthen visual confidence signals.");
-              setConfidenceSignal("Confidence read is unavailable while you are out of frame.");
-              setNervousnessSignal(
+              const p = "No face detected in frame.";
+              const e = "Move back into frame to strengthen visual confidence signals.";
+              const c = "Confidence read is unavailable while you are out of frame.";
+              const n =
                 missingFramesRef.current >= 2
                   ? "Frequent frame breaks detected. This can read like nervous energy in a mock interview."
-                  : "Stay in frame for more stable visual analysis."
-              );
-              publishSignals(
-                "No face detected in frame.",
-                "Move back into frame to strengthen visual confidence signals.",
-                "Confidence read is unavailable while you are out of frame.",
-                missingFramesRef.current >= 2
-                  ? "Frequent frame breaks detected. This can read like nervous energy in a mock interview."
-                  : "Stay in frame for more stable visual analysis."
-              );
+                  : "Stay in frame for more stable visual analysis.";
+              setPresenceSignal(p);
+              setEyeContactProxy(e);
+              setConfidenceSignal(c);
+              setNervousnessSignal(n);
+              publishSignals(p, e, c, n);
               return;
             }
 
@@ -187,30 +185,11 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
             setNervousnessSignal(nextNervousness);
             publishSignals(nextPresence, nextEyeContact, nextConfidence, nextNervousness);
           } catch {
-            setPresenceSignal("Visual presence sampling is temporarily unavailable.");
-            setEyeContactProxy("Voice emotion analysis remains active.");
-            setConfidenceSignal("Visual confidence scoring is temporarily unavailable.");
-            setNervousnessSignal("Visual nervousness scoring is temporarily unavailable.");
-            publishSignals(
-              "Visual presence sampling is temporarily unavailable.",
-              "Voice emotion analysis remains active.",
-              "Visual confidence scoring is temporarily unavailable.",
-              "Visual nervousness scoring is temporarily unavailable."
-            );
+            /* sampling error — keep going */
           }
         }, 2500);
       } catch {
         setStatus("Camera access was blocked or unavailable.");
-        setPresenceSignal("Visual presence checks could not start.");
-        setEyeContactProxy("Voice emotion analysis remains active.");
-        setConfidenceSignal("Visual confidence scoring could not start.");
-        setNervousnessSignal("Visual nervousness scoring could not start.");
-        publishSignals(
-          "Visual presence checks could not start.",
-          "Voice emotion analysis remains active.",
-          "Visual confidence scoring could not start.",
-          "Visual nervousness scoring could not start."
-        );
       }
     };
 
@@ -220,21 +199,7 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
       cancelled = true;
       stopCamera();
     };
-  }, [enabled]);
-
-  const stopCamera = () => {
-    if (monitorHandleRef.current !== null) {
-      window.clearInterval(monitorHandleRef.current);
-      monitorHandleRef.current = null;
-    }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  };
+  }, [enabled, active, publishSignals, stopCamera]);
 
   return (
     <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">

@@ -29,9 +29,11 @@ declare global {
 interface VoiceRecorderProps {
   onRecorded: (result: AudioProcessingResult) => void;
   onProcessingChange?: (processing: boolean) => void;
+  onRecordingStart?: () => void;
+  onRecordingStop?: () => void;
 }
 
-export function VoiceRecorder({ onRecorded, onProcessingChange }: VoiceRecorderProps) {
+export function VoiceRecorder({ onRecorded, onProcessingChange, onRecordingStart, onRecordingStop }: VoiceRecorderProps) {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recognitionRef = useRef<BrowserSpeechRecognition | null>(null);
@@ -101,6 +103,7 @@ export function VoiceRecorder({ onRecorded, onProcessingChange }: VoiceRecorderP
       startSpeechRecognition();
       mediaRecorder.start();
       setRecording(true);
+      onRecordingStart?.();
       setMessage("Recording in progress. Speak naturally and stop when your answer is complete.");
     } catch {
       setMessage("Microphone access was blocked. You can still type your answer manually.");
@@ -111,6 +114,7 @@ export function VoiceRecorder({ onRecorded, onProcessingChange }: VoiceRecorderP
     recognitionRef.current?.stop();
     recorderRef.current?.stop();
     setRecording(false);
+    onRecordingStop?.();
   };
 
   const uploadRecording = async (blob: Blob, mimeType: string) => {
