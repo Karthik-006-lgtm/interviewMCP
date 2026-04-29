@@ -4,6 +4,8 @@ AI-powered interview preparation platform built with MCP (Model Context Protocol
 
 ## Architecture
 
+![Interview Prep MCP Platform Architecture](architecture%20diagram.png)
+
 | Service      | Tech Stack                        | Port |
 |--------------|-----------------------------------|------|
 | frontend     | React 18, TypeScript, Tailwind    | 5173 |
