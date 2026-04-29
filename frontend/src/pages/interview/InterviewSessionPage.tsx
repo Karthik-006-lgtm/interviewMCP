@@ -4,6 +4,7 @@ import { interviewApi } from "../../api/client";
 import { CameraPresencePanel } from "../../components/interview/CameraPresencePanel";
 import { SectionCard } from "../../components/ui/SectionCard";
 import { VoiceRecorder } from "../../components/ui/VoiceRecorder";
+import type { VideoRecordingResult } from "../../components/ui/VoiceRecorder";
 import {
   buildFollowUpPrompts,
   buildSimulationMilestone,
@@ -37,6 +38,7 @@ export function InterviewSessionPage() {
   });
   const [submittingQuestionId, setSubmittingQuestionId] = useState<number | null>(null);
   const [cameraActiveForQuestion, setCameraActiveForQuestion] = useState<string | null>(null);
+  const [videoRecordings, setVideoRecordings] = useState<Record<string, VideoRecordingResult>>({});
 
   useEffect(() => {
     if (!sessionId) {
@@ -428,6 +430,7 @@ export function InterviewSessionPage() {
               />
               <div className="mt-4">
                 <VoiceRecorder
+                  cameraEnabled={session.cameraEnabled}
                   onRecordingStart={() => {
                     if (session.cameraEnabled) {
                       setCameraActiveForQuestion(questionKey);
@@ -435,6 +438,12 @@ export function InterviewSessionPage() {
                   }}
                   onRecordingStop={() => {
                     setCameraActiveForQuestion(null);
+                  }}
+                  onVideoRecorded={(result) => {
+                    setVideoRecordings((current) => ({
+                      ...current,
+                      [questionKey]: result
+                    }));
                   }}
                   onProcessingChange={(processing) =>
                     setAudioProcessing((current) => ({
