@@ -215,10 +215,12 @@ export function InterviewSessionPage() {
     const audioReference = audioReferences[questionKey];
     const answerText = typedAnswer.trim() || transcriptAnswer.trim();
     const cameraModeEnabled = session?.cameraEnabled ?? false;
-    if (!answerText && !audioReference) {
+    if (!answerText) {
       setQuestionErrors((current) => ({
         ...current,
-        [questionKey]: "Type an answer or record an audio answer before submitting."
+        [questionKey]: audioReference
+          ? "No transcript was captured from your recording. Please type your answer in the text box above, then submit."
+          : "Type an answer or record an audio answer before submitting."
       }));
       return;
     }

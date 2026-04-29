@@ -132,7 +132,11 @@ export function VoiceRecorder({ onRecorded, onProcessingChange, onRecordingStart
       });
       setAnalysis(result);
       onRecorded(result);
-      setMessage("Speech analysis is ready. Review the transcript and scorecard before you submit.");
+      if (result.transcript.trim()) {
+        setMessage("Speech analysis is ready. Review the transcript and scorecard before you submit.");
+      } else {
+        setMessage("Speech analysis is ready but no transcript was captured. Please type your answer in the text box above before submitting.");
+      }
     } catch {
       setMessage("Audio upload failed. Your typed answer still works, and you can try recording again.");
     } finally {
