@@ -4,6 +4,21 @@ AI-powered interview preparation platform built with MCP (Model Context Protocol
 
 🔗 **Live Demo:** [https://frontend-murex-seven-78.vercel.app](https://frontend-murex-seven-78.vercel.app)
 
+## Table of Contents
+
+- [Architecture](#architecture)
+- [Key Concepts](#key-concepts)
+  - [MCP (Model Context Protocol)](#mcp-model-context-protocol)
+  - [RAG (Retrieval-Augmented Generation)](#rag-retrieval-augmented-generation)
+  - [Agentic Framework](#agentic-framework)
+  - [Multi-Agent System](#multi-agent-system)
+  - [Guardrails](#guardrails)
+  - [Observability](#observability)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Running Tests](#running-tests)
+- [API Endpoints](#api-endpoints)
+
 ## Architecture
 
 ![Interview Prep MCP Platform Architecture](architecture%20diagram.png)
