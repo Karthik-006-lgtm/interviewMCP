@@ -45,8 +45,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const register = async (payload: { fullName: string; email: string; password: string }) => {
     const response = await authApi.register(payload);
-    localStorage.setItem(TOKEN_KEY, response.token);
-    setUser(response.user);
+    // Don't auto-login — let user go through login page for confirmation flow
+    localStorage.removeItem(TOKEN_KEY);
+    setUser(null);
+    return response;
   };
 
   const logout = () => {

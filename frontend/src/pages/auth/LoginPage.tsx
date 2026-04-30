@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { Toast } from "../../components/ui/Toast";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -8,6 +9,22 @@ export function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+
+  // Auto-fill email from registration
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("interview-prep-saved-email");
+    const savedName = localStorage.getItem("interview-prep-saved-name");
+    if (savedEmail) {
+      setForm((current) => ({ ...current, email: savedEmail }));
+      if (savedName) {
+        setToast({
+          message: `Welcome, ${savedName}! Your email has been auto-filled. Enter your password to sign in.`,
+          type: "info"
+        });
+      }
+    }
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -16,9 +33,22 @@ export function LoginPage() {
 
     try {
       await login(form);
-      navigate("/dashboard");
+
+      const savedName = localStorage.getItem("interview-prep-saved-name") || "there";
+      setToast({
+        message: `Welcome back, ${savedName}! Redirecting to your dashboard...`,
+        type: "success"
+      });
+
+      // Clear saved registration data after successful login
+      localStorage.removeItem("interview-prep-saved-name");
+      localStorage.removeItem("interview-prep-saved-email");
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
     } catch {
-      setError("Unable to sign in. Please verify your credentials and backend service.");
+      setError("Unable to sign in. Please verify your credentials and try again.");
     } finally {
       setLoading(false);
     }
@@ -33,6 +63,8 @@ export function LoginPage() {
         backgroundRepeat: "no-repeat"
       }}
     >
+      {toast ? <Toast message={toast.message} type={toast.type} duration={3500} onClose={() => setToast(null)} /> : null}
+
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
         <div className="auth-card w-full max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl">
           <div className="grid lg:grid-cols-2">
@@ -60,6 +92,7 @@ export function LoginPage() {
                     type="email"
                     value={form.email}
                     onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+                    placeholder="name@example.com"
                     className="w-full rounded-2xl border border-slate-300 bg-white/90 px-4 py-3 text-slate-950 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#FEC51E] focus:ring-2 focus:ring-[#FEC51E]/30"
                   />
                 </label>
@@ -70,9 +103,15 @@ export function LoginPage() {
                     type="password"
                     value={form.password}
                     onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+                    placeholder="Enter your password"
                     className="w-full rounded-2xl border border-slate-300 bg-white/90 px-4 py-3 text-slate-950 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#FEC51E] focus:ring-2 focus:ring-[#FEC51E]/30"
                   />
                 </label>
+                <div className="flex justify-end">
+                  <Link to="/forgot-password" className="text-sm font-medium hover:underline" style={{ color: "#FEC51E" }}>
+                    Forgot password?
+                  </Link>
+                </div>
                 {error ? <p className="text-sm text-rose-400">{error}</p> : null}
                 <button
                   type="submit"
@@ -95,4 +134,3 @@ export function LoginPage() {
     </div>
   );
 }
-

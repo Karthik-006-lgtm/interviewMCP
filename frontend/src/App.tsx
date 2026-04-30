@@ -7,6 +7,7 @@ import { CompanyDetailPage } from "./pages/company/CompanyDetailPage";
 import { CompanyMatchesPage } from "./pages/company/CompanyMatchesPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
 import { ReportsPage } from "./pages/dashboard/ReportsPage";
 import { InterviewPracticePage } from "./pages/interview/InterviewPracticePage";
@@ -21,6 +22,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route
         element={
           <ProtectedRoute>
