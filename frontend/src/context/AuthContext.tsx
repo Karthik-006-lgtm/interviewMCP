@@ -44,11 +44,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
   };
 
   const register = async (payload: { fullName: string; email: string; password: string }) => {
-    const response = await authApi.register(payload);
+    await authApi.register(payload);
     // Don't auto-login — let user go through login page for confirmation flow
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
-    return response;
   };
 
   const logout = () => {
