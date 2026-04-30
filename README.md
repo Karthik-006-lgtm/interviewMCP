@@ -21,7 +21,7 @@ AI-powered interview preparation platform built with MCP (Model Context Protocol
 
 ## Architecture
 
-![Interview Prep MCP Platform Architecture](architecture%20diagram.png)
+![Interview Prep MCP Platform Architecture](architecture%20.png)
 
 | Service      | Tech Stack                        | Deployed On |
 |--------------|-----------------------------------|-------------|
