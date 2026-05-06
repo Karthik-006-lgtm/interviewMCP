@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -179,7 +181,7 @@ public class AiOrchestrationService {
         return response != null ? response : fallback;
     }
 
-    public SpeechAnalysis analyzeSpeech(Path audioPath, String transcriptHint, Long durationMs) {
+    public SpeechAnalysis analyzeSpeech(@NonNull Path audioPath, @Nullable String transcriptHint, @Nullable Long durationMs) {
         SpeechAnalysis fallback = fallbackSpeechAnalysis(transcriptHint, durationMs);
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.part("file", new FileSystemResource(audioPath));
@@ -199,7 +201,7 @@ public class AiOrchestrationService {
         return response != null ? response : fallback;
     }
 
-    public SpeechAnalysis fallbackSpeechAnalysis(String transcriptHint, Long durationMs) {
+    public SpeechAnalysis fallbackSpeechAnalysis(@Nullable String transcriptHint, @Nullable Long durationMs) {
         String transcript = StringUtils.hasText(transcriptHint) ? polishAnswer(transcriptHint) : "";
         int wordCount = countWords(transcript);
         double minutes = durationMs == null || durationMs <= 0 ? 1.0 : durationMs / 60000.0;

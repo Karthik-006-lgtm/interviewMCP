@@ -33,26 +33,80 @@ CREATE TABLE IF NOT EXISTS skills (
 CREATE TABLE IF NOT EXISTS resumes (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    original_file_name VARCHAR(255) NOT NULL,
-    storage_path VARCHAR(255) NOT NULL,
-    extracted_text TEXT NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_size INTEGER NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    upload_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    is_parsed BOOLEAN NOT NULL DEFAULT FALSE,
+    parsing_status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    parsing_error TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS parsed_resumes (
+    id BIGSERIAL PRIMARY KEY,
+    resume_id BIGINT NOT NULL REFERENCES resumes(id) ON DELETE CASCADE UNIQUE,
+    full_name VARCHAR(255),
+    email VARCHAR(255),
+    phone VARCHAR(50),
+    location VARCHAR(255),
+    linkedin_url VARCHAR(500),
+    github_url VARCHAR(500),
+    portfolio_url VARCHAR(500),
     summary TEXT,
-    candidate_name VARCHAR(160),
-    contact_info TEXT,
-    strengths TEXT,
-    weaknesses TEXT,
-    extracted_skills TEXT NOT NULL,
-    recommended_roles TEXT,
-    education TEXT,
-    experience TEXT,
-    projects TEXT,
-    certifications TEXT,
-    missing_skills TEXT,
-    strength_indicators TEXT,
-    weakness_indicators TEXT,
-    improvement_roadmap TEXT,
-    learning_suggestions TEXT,
-    mentor_guidance TEXT,
+    skills JSONB,
+    technical_skills JSONB,
+    soft_skills JSONB,
+    work_experience JSONB,
+    total_years_experience FLOAT,
+    education JSONB,
+    certifications JSONB,
+    projects JSONB,
+    languages JSONB,
+    parsing_confidence FLOAT CHECK (parsing_confidence >= 0.0 AND parsing_confidence <= 1.0),
+    parsed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    parser_version VARCHAR(50),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS skills (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    category VARCHAR(100),
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_skills (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    skill_id BIGINT NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
+    proficiency_level VARCHAR(50),
+    years_of_experience FLOAT,
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    verified_by VARCHAR(100),
+    last_updated TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    source VARCHAR(100),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE(user_id, skill_id)
+);
+
+CREATE TABLE IF NOT EXISTS skill_gaps (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    target_role VARCHAR(255),
+    target_company VARCHAR(255),
+    missing_skills JSONB,
+    recommended_skills JSONB,
+    skill_priority JSONB,
+    gap_score FLOAT CHECK (gap_score >= 0.0 AND gap_score <= 1.0),
+    analysis_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    analysis_version VARCHAR(50),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

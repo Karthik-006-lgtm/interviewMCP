@@ -15,6 +15,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -43,7 +45,7 @@ public class CompanyService {
     }
 
     @Transactional(readOnly = true)
-    public List<CompanyResponse> matchCompanies(Long userId, List<String> selectedRoles) {
+    public List<CompanyResponse> matchCompanies(@NonNull Long userId, @Nullable List<String> selectedRoles) {
         User user = loadUser(userId);
         ResumeProfile latestResume = resumeProfileRepository.findTopByUserOrderByCreatedAtDesc(user).orElse(null);
         List<String> effectiveRoles = resolveRoles(selectedRoles, latestResume);
@@ -64,7 +66,7 @@ public class CompanyService {
     }
 
     @Transactional(readOnly = true)
-    public CompanyResponse getCompany(Long userId, Long companyId) {
+    public CompanyResponse getCompany(@NonNull Long userId, @NonNull Long companyId) {
         User user = loadUser(userId);
         ResumeProfile latestResume = resumeProfileRepository.findTopByUserOrderByCreatedAtDesc(user).orElse(null);
         Company company = companyRepository.findById(companyId)
@@ -74,11 +76,11 @@ public class CompanyService {
 
     @Transactional(readOnly = true)
     public List<CompanyResponse> searchCompanies(
-            Long userId,
-            List<String> selectedRoles,
-            String query,
-            Double minMatchScore,
-            String companySize
+            @NonNull Long userId,
+            @Nullable List<String> selectedRoles,
+            @Nullable String query,
+            @Nullable Double minMatchScore,
+            @Nullable String companySize
     ) {
         double effectiveMinimum = minMatchScore == null ? 0.0 : minMatchScore;
         String normalizedQuery = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);

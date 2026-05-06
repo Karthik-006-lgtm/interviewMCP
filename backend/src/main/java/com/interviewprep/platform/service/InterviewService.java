@@ -31,6 +31,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -77,7 +79,7 @@ public class InterviewService {
     }
 
     @Transactional
-    public InterviewSessionResponse createSession(Long userId, InterviewSessionRequest request) {
+    public InterviewSessionResponse createSession(@NonNull Long userId, @NonNull InterviewSessionRequest request) {
         User user = loadUser(userId);
         ResumeProfile resumeProfile = request.resumeId() != null
                 ? resumeProfileRepository.findById(request.resumeId())
@@ -132,7 +134,7 @@ public class InterviewService {
     }
 
     @Transactional(readOnly = true)
-    public InterviewSessionResponse getSession(Long userId, Long sessionId) {
+    public InterviewSessionResponse getSession(@NonNull Long userId, @NonNull Long sessionId) {
         InterviewSession session = interviewSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Interview session not found"));
         if (!session.getUser().getId().equals(userId)) {
@@ -143,7 +145,7 @@ public class InterviewService {
     }
 
     @Transactional
-    public AnswerEvaluationResponse submitAnswer(Long userId, Long questionId, AnswerSubmissionRequest request) {
+    public AnswerEvaluationResponse submitAnswer(@NonNull Long userId, @NonNull Long questionId, @NonNull AnswerSubmissionRequest request) {
         InterviewQuestion question = interviewQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Question not found"));
         if (!question.getSession().getUser().getId().equals(userId)) {
@@ -254,7 +256,7 @@ public class InterviewService {
     }
 
     @Transactional(readOnly = true)
-    public LiveCoachingResponse coachAnswer(Long userId, Long questionId, LiveCoachingRequest request) {
+    public LiveCoachingResponse coachAnswer(@NonNull Long userId, @NonNull Long questionId, @NonNull LiveCoachingRequest request) {
         InterviewQuestion question = interviewQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Question not found"));
         if (!question.getSession().getUser().getId().equals(userId)) {
@@ -308,12 +310,12 @@ public class InterviewService {
     }
 
     private List<InterviewQuestion> buildQuestions(
-            InterviewSession session,
-            ResumeProfile resumeProfile,
-            Company company,
-            List<String> selectedRoles,
-            String personalityProfile,
-            List<String> technicalSkills
+            @NonNull InterviewSession session,
+            @Nullable ResumeProfile resumeProfile,
+            @Nullable Company company,
+            @NonNull List<String> selectedRoles,
+            @Nullable String personalityProfile,
+            @NonNull List<String> technicalSkills
     ) {
         String summary = resumeProfile != null && StringUtils.hasText(resumeProfile.getSummary())
                 ? resumeProfile.getSummary()

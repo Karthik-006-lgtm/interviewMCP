@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,7 +19,7 @@ public class AppConfig {
     }
 
     @Bean
-    public WebClient aiWebClient(@Value("${app.ai-service.base-url}") String aiServiceBaseUrl) {
+    public WebClient aiWebClient(@Value("${app.ai-service.base-url}") @NonNull String aiServiceBaseUrl) {
         return WebClient.builder()
                 .baseUrl(aiServiceBaseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
