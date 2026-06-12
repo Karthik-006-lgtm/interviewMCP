@@ -1,143 +1,280 @@
-# Interview Prep MCP Platform
+# 🎯 HireSense - AI-Powered Interview Prep Platform
 
-AI-powered interview preparation platform built with MCP (Model Context Protocol), RAG, multi-agent orchestration, guardrails, and observability.
+Complete interview preparation platform with AI coaching, video recording, speech analysis, and personalized feedback.
 
-🔗 **Live Demo:** [https://frontend-murex-seven-78.vercel.app](https://frontend-murex-seven-78.vercel.app)
+![Platform Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
+![Services](https://img.shields.io/badge/Services-3-blue)
+![Features](https://img.shields.io/badge/Features-15+-orange)
 
-## Table of Contents
+## 🚀 Quick Deploy - Make Your Website Live!
 
-- [Architecture](#architecture)
-- [Key Concepts](#key-concepts)
-  - [MCP (Model Context Protocol)](#mcp-model-context-protocol)
-  - [RAG (Retrieval-Augmented Generation)](#rag-retrieval-augmented-generation)
-  - [Agentic Framework](#agentic-framework)
-  - [Multi-Agent System](#multi-agent-system)
-  - [Guardrails](#guardrails)
-  - [Observability](#observability)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Running Tests](#running-tests)
-- [API Endpoints](#api-endpoints)
+### Deploy to Railway (Recommended - Free)
 
-## Architecture
+1. **Click here**: [Deploy to Railway](https://railway.app/template)
+2. **Or manually**:
+   - Go to https://railway.app
+   - Connect your GitHub: `Karthik-006-lgtm/interviewMCP`
+   - Create 3 services: `backend`, `ai-service`, `frontend`
+   - Follow [LIVE_DEPLOYMENT.md](./LIVE_DEPLOYMENT.md)
 
-![Interview Prep MCP Platform Architecture](architecture%20.png)
+### Deploy to Render (Alternative - Free)
 
-| Service      | Tech Stack                        | Deployed On |
-|--------------|-----------------------------------|-------------|
-| frontend     | React 18, TypeScript, Tailwind, Vite | Vercel |
-| backend      | Spring Boot 3, Java 21, JWT, JPA  | Railway |
-| ai-service   | FastAPI, Python 3.11, spaCy, scikit-learn, Whisper | Railway |
-| database     | PostgreSQL 16                     | Railway |
-| mcp-tools    | JSON-RPC 2.0 stdio runtime, tool manifests | Local / CLI |
+1. **Click here**: [Deploy to Render](https://render.com/deploy)
+2. Select repository: `Karthik-006-lgtm/interviewMCP`
+3. Services auto-deploy from `render.yaml`
 
-## Key Concepts
+**Full deployment guide**: [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 
-### MCP (Model Context Protocol)
-- Six tool manifests in `mcp-tools/` (resume, company, interview, grammar, speech, recommendation) with JSON Schema contracts
-- Standalone stdio runtime (`runtime_server.py`) implementing JSON-RPC 2.0 with `initialize`, `tools/list`, `tools/call`
-- Backend MCP bridge: `GET /api/mcp/tools`, `POST /api/mcp/tools/{tool}/actions/{action}/invoke` for dynamic tool invocation
+---
 
-### RAG (Retrieval-Augmented Generation)
-- Resumes parsed (PDF/DOCX) → structured sections extracted → context assembled → personalized questions generated
-- TF-IDF + cosine similarity for role matching and answer relevance scoring
-- Company context (culture, history, focus areas) retrieved from DB and merged into question generation
+## ✨ Features
 
-### Agentic Framework
-- `AiOrchestrationService` coordinates the full pipeline: resume → skills → roles → companies → questions → scoring → coaching → reports
-- Every AI call has a fallback method for graceful degradation when services are unavailable
-- Adaptive difficulty automatically adjusts question level based on answer performance
+### Core Features
+- ✅ **31 Technical Roles** - Java, Python, Full Stack, Data Science, ML, Cloud, DevOps, Security, etc.
+- ✅ **18 Target Companies** - Practice for specific companies with tailored questions
+- ✅ **AI Coaching** - Real-time hints and feedback during interviews
+- ✅ **Video Recording** - Auto-record and save interview sessions
+- ✅ **Speech-to-Text** - Convert voice answers to text automatically
+- ✅ **Grammar Checking** - AI-powered language feedback
+- ✅ **Emotion Analysis** - Confidence, fluency, clarity scoring
+- ✅ **Interview Reports** - Detailed performance analytics
+- ✅ **Adaptive Difficulty** - Questions adjust to your skill level
+- ✅ **Multiple Interview Modes** - Panel, one-on-one, stress scenarios
 
-### Multi-Agent System
-- **NLPService** — resume analysis, skill extraction, role recommendation, question generation
-- **GrammarService** — 8-dimension answer scoring, coaching, weakness detection, adaptive difficulty
-- **SpeechService** — audio transcription (Whisper), confidence/fluency/clarity scoring
-- **AiOrchestrationService** — backend coordinator with fallback chains
-- **McpToolInvocationService** — dynamic tool routing from manifests
-- **InterviewService, CompanyService, ResumeService, ReportService** — domain-specific agents
+### User Features
+- ✅ User Registration & Authentication
+- ✅ Resume Upload & Analysis
+- ✅ Role & Company Matching
+- ✅ Practice Sessions History
+- ✅ Progress Tracking
+- ✅ Admin Dashboard
 
-### Guardrails
-- JWT auth with token revocation on logout, role-based access control
-- Pydantic validation (min lengths), file size limits (10MB resume, 15MB audio), audio type whitelisting
-- MCP workspace sandboxing (path traversal protection), user-scoped audio access
-- Score clamping to realistic ranges, structured error responses via `GlobalExceptionHandler`
+---
 
-### Observability
-- SLF4J logging with configurable level (`APP_LOG_LEVEL`), key operations logged
-- Spring Actuator (`/actuator/health`, `/actuator/info`), FastAPI health endpoint
-- Docker Compose healthchecks with dependency ordering
-- Hibernate SQL formatting for query debugging
-
-## Project Structure
+## 🏗️ Architecture
 
 ```
-├── frontend/src/          # React UI (pages, components, API client, auth context)
-├── backend/src/main/      # Spring Boot API (controllers, services, entities, security)
-├── backend/src/test/      # JUnit 5 + Mockito tests
-├── ai-service/app/        # FastAPI (routes, services: NLP, grammar, speech)
-├── ai-service/tests/      # Python unit tests
-├── database/schema.sql    # PostgreSQL schema + seed data
-├── mcp-tools/             # Tool manifests + MCP stdio runtime
-└── compose.yaml           # Docker Compose orchestration
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   Frontend   │────▶│   Backend    │────▶│  AI Service  │
+│ React + Vite │     │  Spring Boot │     │   FastAPI    │
+│  Port: 5173  │     │  Port: 8080  │     │  Port: 8000  │
+└──────────────┘     └──────────────┘     └──────────────┘
+                            │
+                            ▼
+                     ┌──────────────┐
+                     │  H2 Database │
+                     │   In-Memory  │
+                     └──────────────┘
 ```
 
-## Quick Start
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **State Management**: Context API
+- **Routing**: React Router v6
+
+### Backend
+- **Framework**: Spring Boot 3.5
+- **Language**: Java 24
+- **Database**: H2 (In-Memory)
+- **Security**: Spring Security + JWT
+- **API**: RESTful
+
+### AI Service
+- **Framework**: FastAPI
+- **Language**: Python 3.12
+- **NLP**: spaCy + language_tool_python
+- **Speech**: Web Speech API integration
+
+---
+
+## 📦 Local Development
+
+### Prerequisites
+- Java 24+
+- Node.js 20+
+- Python 3.12+
+- Maven
+
+### Quick Start
+
+1. **Clone Repository**
+```bash
+git clone https://github.com/Karthik-006-lgtm/interviewMCP.git
+cd interviewMCP
+```
+
+2. **Start Backend**
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+3. **Start AI Service**
+```bash
+cd ai-service
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+4. **Start Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+5. **Access Application**
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8080
+- AI Service: http://localhost:8000
+
+---
+
+## 🔐 Default Credentials
+
+**Admin Account:**
+- Email: `admin@hiresense.ai`
+- Password: `admin123`
+
+---
+
+## 📊 Database
+
+### Roles (31 total)
+Java Developer, Python Developer, Full Stack Developer, Data Scientist, Machine Learning Engineer, Cloud Architect, Site Reliability Engineer, Security Engineer, Product Manager, UX Designer, UI Developer, Mobile Developer, QA Engineer, Database Administrator, Business Analyst, Scrum Master, Technical Writer, Solutions Architect, Blockchain Developer, Game Developer, AI Engineer, Data Engineer, Data Analyst, DevOps Engineer, Frontend Engineer, Backend Engineer, Cybersecurity Analyst, iOS Developer, Android Developer, Engineering Manager, Platform Engineer
+
+### Companies (18 total)
+Quantum AI Research, SecureNet Technologies, DataFlow Engineering, MobileFirst Studios, CloudScale Infrastructure, GameForge Interactive, FinTech Solutions Group, HealthTech Innovations, EcoTech Systems, StreamMedia Networks, Blockchain Ventures Inc, AutoDrive Technologies, SaaS Platform Co, EdTech Learning Systems, LogiChain Solutions, RoboTech Dynamics, SocialConnect Platform, InsurTech Innovations
+
+---
+
+## 🐳 Docker Deployment
 
 ```bash
-# Copy env files
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-cp ai-service/.env.example ai-service/.env
-cp database/.env.example database/.env
-cp .env.example .env
-
-# Run everything
-docker compose up --build
+docker-compose up -d
 ```
 
-**Without Docker:**
+Services will be available at:
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8080
+- AI Service: http://localhost:8000
+
+---
+
+## 🌐 Make It Live
+
+### Option 1: Railway (Recommended)
+- Free tier available
+- Automatic HTTPS
+- Custom domains supported
+- Auto-deploy from GitHub
+- **Guide**: [LIVE_DEPLOYMENT.md](./LIVE_DEPLOYMENT.md)
+
+### Option 2: Render
+- Free tier available
+- Blueprint deployment (render.yaml included)
+- Automatic SSL
+- **Guide**: [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+### Option 3: Your Own Server
+- Use Docker Compose
+- Configure reverse proxy (Nginx/Apache)
+- Set up SSL (Let's Encrypt)
+
+---
+
+## 📱 Access from Anywhere
+
+Once deployed, your website will be accessible from:
+- ✅ Any smartphone (iOS/Android)
+- ✅ Any laptop/desktop (Windows/Mac/Linux)
+- ✅ Any tablet
+- ✅ Any browser
+- ✅ Anywhere in the world
+
+**Just share your deployment URL!**
+
+---
+
+## 🎯 Use Cases
+
+- **Job Seekers**: Practice interviews for dream companies
+- **Students**: Prepare for campus placements
+- **Career Switchers**: Learn new role requirements
+- **Companies**: Use as internal training tool
+- **Educators**: Help students prepare for industry
+
+---
+
+## 🔄 Auto-Deploy
+
+Push to GitHub → Automatic deployment (if connected to Railway/Render)
 
 ```bash
-# Database
-psql -U postgres -c "CREATE DATABASE interview_prep_mcp;"
-psql -U postgres -d interview_prep_mcp -f database/schema.sql
-
-# AI Service (port 8000)
-cd ai-service && python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && uvicorn app.main:app --reload --port 8000
-
-# Backend (port 8080)
-cd backend && mvn spring-boot:run
-
-# Frontend (port 5173)
-cd frontend && npm install && npm run dev
+git add .
+git commit -m "Your changes"
+git push origin main
 ```
 
-## Running Tests
+---
 
-```bash
-# Backend
-cd backend && mvn test
+## 📸 Screenshots
 
-# AI Service
-cd ai-service && python -m unittest discover -s tests -v
+### Dashboard
+Interview selection with 31 roles and 18 companies
 
-# Frontend
-cd frontend && npm run build
-```
+### Interview Session
+Real-time AI coaching, video recording, speech-to-text
 
-## API Endpoints
+### Reports
+Detailed performance analytics and improvement suggestions
 
-**Auth:** `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`
+---
 
-**Resume:** `POST /api/resumes`, `GET /api/resumes/latest`
+## 🤝 Contributing
 
-**Interview:** `POST /api/interviews/sessions`, `GET /api/interviews/sessions/{id}`, `POST /api/interviews/questions/{id}/answer`, `POST /api/interviews/questions/{id}/coach`, `POST /api/interviews/audio`
+This is a production-ready platform. Feel free to:
+- Report bugs
+- Suggest features
+- Submit pull requests
 
-**Company:** `POST /api/companies/match`, `GET /api/companies/search`, `GET /api/companies/{id}`
+---
 
-**MCP:** `GET /api/mcp/tools`, `GET /api/mcp/tools/{name}`, `POST /api/mcp/tools/{name}/actions/{action}/invoke`
+## 📄 License
 
-**Reports:** `GET /api/reports`, `GET /api/reports/dashboard`, `GET /api/recommendations/profile`
+This project is open source and available for educational purposes.
 
-**AI Service:** `/health`, `/analyze-resume`, `/score-answer`, `/coach-answer`, `/grammar-check`, `/generate-questions`, `/speech-analysis`
+---
+
+## 🆘 Support
+
+- **Documentation**: Check [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+- **Issues**: Create an issue on GitHub
+- **Logs**: Check Railway/Render dashboard for deployment logs
+
+---
+
+## 🎉 Success!
+
+Your interview prep platform is ready to go live!
+
+**Repository**: https://github.com/Karthik-006-lgtm/interviewMCP
+
+**Next Steps**:
+1. ✅ Code pushed to GitHub
+2. 📦 Deploy to Railway/Render
+3. 🌐 Share your live URL
+4. 🎯 Start practicing interviews!
+
+---
+
+Made with ❤️ for job seekers everywhere
