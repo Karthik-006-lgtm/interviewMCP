@@ -192,9 +192,6 @@ export function VoiceRecorder({ onRecorded, onProcessingChange }: VoiceRecorderP
             Stop recording
           </button>
         )}
-        <span className="text-sm text-white/64">
-          Browser speech recognition fills the transcript when available, and the backend scores delivery after upload.
-        </span>
       </div>
 
       {message ? <p className="mt-3 text-sm text-white/68">{message}</p> : null}

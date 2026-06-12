@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
@@ -24,6 +26,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class AiOrchestrationService {
+
+    private static final Logger log = LoggerFactory.getLogger(AiOrchestrationService.class);
 
     private static final Map<String, List<String>> ROLE_KEYWORDS = Map.of(
             "Java Developer", List.of("java", "spring", "spring boot", "hibernate", "microservices", "sql"),
@@ -90,14 +94,22 @@ public class AiOrchestrationService {
             String companyName
     ) {
         LiveCoaching fallback = fallbackLiveCoaching(question, answerDraft, coachingIntensity, silenceDetected, targetRole, companyName);
-        LiveCoaching response = aiWebClient.post()
-                .uri("/coach_answer")
-                .bodyValue(new CoachAnswerRequest(question, answerDraft, coachingIntensity, silenceDetected, targetRole, companyName))
-                .retrieve()
-                .bodyToMono(LiveCoaching.class)
-                .onErrorReturn(fallback)
-                .block();
-        return response != null ? response : fallback;
+        try {
+            log.info("Requesting live coaching from AI service for role: {}, company: {}", targetRole, companyName);
+            LiveCoaching response = aiWebClient.post()
+                    .uri("/coach_answer")
+                    .bodyValue(new CoachAnswerRequest(question, answerDraft, coachingIntensity, silenceDetected, targetRole, companyName))
+                    .retrieve()
+                    .bodyToMono(LiveCoaching.class)
+                    .doOnError(error -> log.error("AI service live coaching request failed: {}", error.getMessage()))
+                    .onErrorReturn(fallback)
+                    .block();
+            log.info("Live coaching response received successfully");
+            return response != null ? response : fallback;
+        } catch (Exception e) {
+            log.error("Unexpected error during live coaching request", e);
+            return fallback;
+        }
     }
 
     public GrammarCheck grammarCheck(String answerText) {
@@ -181,6 +193,7 @@ public class AiOrchestrationService {
         return response != null ? response : fallback;
     }
 
+    @SuppressWarnings("null")
     public SpeechAnalysis analyzeSpeech(@NonNull Path audioPath, @Nullable String transcriptHint, @Nullable Long durationMs) {
         SpeechAnalysis fallback = fallbackSpeechAnalysis(transcriptHint, durationMs);
         MultipartBodyBuilder builder = new MultipartBodyBuilder();

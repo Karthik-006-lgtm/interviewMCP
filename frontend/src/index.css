@@ -1,12 +1,24 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color: #eef2ff;
-  font-family: "DM Sans", sans-serif;
+  --color-text-primary: #2c2416;
+  --color-text-secondary: #4a3f2f;
+  --color-text-tertiary: #6b5d47;
+  --color-text-muted: #8a7a63;
+  --color-text-light: #a89b84;
+  --color-accent-primary: #6b4423;
+  --color-accent-secondary: #8b5a2b;
+  --color-accent-emerald: #047857;
+  --color-accent-teal: #0d9488;
+  --color-accent-cyan: #0891b2;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 html,
@@ -21,9 +33,11 @@ body {
 body {
   margin: 0;
   min-height: 100vh;
-  color: #eef2ff;
+  color: var(--color-text-primary);
   background: transparent;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -39,115 +53,392 @@ a {
 }
 
 .workspace-theme {
-  color: #eef2ff;
+  color: var(--color-text-primary);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 .workspace-theme .glass-panel {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(31, 11, 47, 0.92), rgba(11, 18, 42, 0.82));
-  border: 1px solid rgba(30, 214, 255, 0.14);
+  background: linear-gradient(135deg, rgba(223, 208, 184, 0.95), rgba(223, 208, 184, 0.98));
+  border: 1px solid rgba(148, 137, 121, 0.3);
   backdrop-filter: blur(20px);
   box-shadow:
-    0 30px 90px rgba(6, 10, 28, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 30px 90px rgba(148, 137, 121, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  color: var(--color-text-primary);
 }
 
 .workspace-theme .glass-panel:hover {
-  border-color: rgba(30, 214, 255, 0.24);
+  border-color: rgba(148, 137, 121, 0.5);
   box-shadow:
-    0 34px 100px rgba(6, 10, 28, 0.58),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 34px 100px rgba(148, 137, 121, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .workspace-theme .app-surface {
-  background: rgba(245, 247, 255, 0.08);
-  border: 1px solid rgba(30, 214, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  background: rgba(223, 208, 184, 0.85);
+  border: 1px solid rgba(148, 137, 121, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: var(--color-text-secondary);
 }
 
 .workspace-theme .app-surface-strong {
-  background: rgba(255, 255, 255, 0.11);
-  border: 1px solid rgba(255, 75, 199, 0.18);
+  background: rgba(223, 208, 184, 0.95);
+  border: 1px solid rgba(148, 137, 121, 0.4);
+  color: var(--color-text-primary);
 }
 
 .workspace-theme .app-muted {
-  color: rgba(232, 236, 255, 0.72);
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
 }
 
 .workspace-theme .app-button-primary {
-  background: linear-gradient(135deg, #1ed6ff, #58b6ff);
-  color: #091121;
-  box-shadow: 0 14px 32px rgba(30, 214, 255, 0.28);
+  background: linear-gradient(135deg, #6b4423, #8b5a2b);
+  color: #ffffff;
+  box-shadow: 0 14px 32px rgba(107, 68, 35, 0.35);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
 }
 
 .workspace-theme .app-button-primary:hover {
-  filter: brightness(1.05);
+  background: linear-gradient(135deg, #7d5129, #9d6a31);
   transform: translateY(-1px);
+  box-shadow: 0 16px 36px rgba(107, 68, 35, 0.4);
 }
 
 .workspace-theme .app-button-secondary {
-  background: rgba(255, 75, 199, 0.14);
-  color: #f8f7ff;
-  border: 1px solid rgba(255, 75, 199, 0.32);
+  background: rgba(148, 137, 121, 0.2);
+  color: var(--color-text-primary);
+  border: 1px solid rgba(148, 137, 121, 0.4);
+  font-weight: 600;
+  font-size: 0.9375rem;
 }
 
 .workspace-theme .app-button-secondary:hover {
-  background: rgba(255, 75, 199, 0.2);
+  background: rgba(148, 137, 121, 0.3);
+  color: var(--color-accent-primary);
 }
 
 .workspace-theme .app-button-soft {
-  background: rgba(255, 255, 255, 0.08);
-  color: #eef2ff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(223, 208, 184, 0.6);
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(148, 137, 121, 0.3);
+  font-weight: 600;
+  font-size: 0.9375rem;
 }
 
 .workspace-theme .app-button-soft:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(223, 208, 184, 0.8);
+  color: var(--color-text-primary);
 }
 
 .workspace-theme .app-chip {
-  background: rgba(30, 214, 255, 0.12);
-  color: #84efff;
-  border: 1px solid rgba(30, 214, 255, 0.18);
+  background: rgba(148, 137, 121, 0.25);
+  color: var(--color-text-secondary);
+  border: 1px solid rgba(148, 137, 121, 0.4);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
 }
 
 .workspace-theme .app-chip-secondary {
-  background: rgba(255, 75, 199, 0.12);
-  color: #ff92df;
-  border: 1px solid rgba(255, 75, 199, 0.18);
+  background: rgba(148, 137, 121, 0.3);
+  color: var(--color-text-primary);
+  border: 1px solid rgba(148, 137, 121, 0.5);
+  font-weight: 600;
+  font-size: 0.8125rem;
 }
 
 .workspace-theme .app-chip-accent {
-  background: rgba(255, 200, 87, 0.14);
-  color: #ffd980;
-  border: 1px solid rgba(255, 200, 87, 0.18);
+  background: rgba(223, 208, 184, 0.9);
+  color: var(--color-accent-primary);
+  border: 1px solid rgba(148, 137, 121, 0.5);
+  font-weight: 700;
+  font-size: 0.8125rem;
 }
 
 .workspace-theme input,
 .workspace-theme select,
 .workspace-theme textarea {
-  color: #eef2ff;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(148, 137, 121, 0.4);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
 .workspace-theme input::placeholder,
 .workspace-theme textarea::placeholder {
-  color: rgba(232, 236, 255, 0.48);
+  color: var(--color-text-light);
+  font-weight: 400;
 }
 
 .workspace-theme input:focus,
 .workspace-theme select:focus,
 .workspace-theme textarea:focus {
-  border-color: rgba(30, 214, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(30, 214, 255, 0.14);
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px rgba(107, 68, 35, 0.15);
+  outline: none;
 }
 
 .workspace-theme select option {
-  color: #eef2ff;
-  background: #120b22;
+  color: var(--color-text-primary);
+  background: #DFD0B8;
+  font-weight: 500;
 }
 
+/* Typography Styles */
+.workspace-theme h1,
+.workspace-theme h2,
+.workspace-theme h3,
+.workspace-theme h4 {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.workspace-theme h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+.workspace-theme h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.workspace-theme h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.workspace-theme h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.workspace-theme p {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.workspace-theme .text-lg {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.workspace-theme .text-sm {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.workspace-theme .text-xs {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.workspace-theme .font-display {
+  font-family: "Poppins", "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Accent Colors for Stats and Highlights */
+.workspace-theme .text-teal-600,
+.workspace-theme .text-teal-700 {
+  color: var(--color-accent-teal);
+  font-weight: 700;
+}
+
+.workspace-theme .text-emerald-600,
+.workspace-theme .text-green-600 {
+  color: var(--color-accent-emerald);
+  font-weight: 700;
+}
+
+.workspace-theme .text-cyan-200,
+.workspace-theme .text-cyan-300 {
+  color: var(--color-accent-cyan);
+  font-weight: 700;
+}
+
+.workspace-theme .text-gray-900 {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.workspace-theme .text-gray-800 {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.workspace-theme .text-gray-700 {
+  color: var(--color-text-tertiary);
+}
+
+.workspace-theme .text-gray-600 {
+  color: var(--color-text-muted);
+}
+
+/* Link Styles */
+.workspace-theme a {
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.workspace-theme a:hover {
+  color: var(--color-accent-secondary);
+  text-decoration: underline;
+}
+
+/* List Styles */
+.workspace-theme ul,
+.workspace-theme ol {
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+}
+
+.workspace-theme li {
+  margin-bottom: 0.5rem;
+}
+
+/* Label Styles */
+.workspace-theme label {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+
+/* Override for Interview Session Special Text Areas */
+.workspace-theme .text-white\/78,
+.workspace-theme .text-white\/82,
+.workspace-theme .text-white\/76,
+.workspace-theme .text-white\/72,
+.workspace-theme .text-white\/70,
+.workspace-theme .text-white\/65,
+.workspace-theme .text-white\/50 {
+  color: var(--color-text-secondary) !important;
+  font-weight: 500;
+}
+
+.workspace-theme .text-white {
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+}
+
+.workspace-theme .text-cyan-200 {
+  color: var(--color-accent-teal) !important;
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+
+.workspace-theme .text-cyan-300 {
+  color: var(--color-accent-cyan) !important;
+  font-weight: 700;
+}
+
+/* Score Display Styles */
+.workspace-theme .text-4xl {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  font-family: "Poppins", sans-serif;
+}
+
+.workspace-theme .text-3xl {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  font-family: "Poppins", sans-serif;
+}
+
+.workspace-theme .text-2xl {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Uppercase Labels */
+.workspace-theme .uppercase {
+  color: var(--color-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+/* Semibold Text */
+.workspace-theme .font-semibold {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Medium Weight Text */
+.workspace-theme .font-medium {
+  font-weight: 600;
+}
+
+/* Leading Styles for Better Readability */
+.workspace-theme .leading-7 {
+  line-height: 1.85;
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+}
+
+/* Error Text */
+.workspace-theme .text-rose-600,
+.workspace-theme .text-rose-400 {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Success Text */
+.workspace-theme .text-green-600,
+.workspace-theme .text-emerald-600 {
+  color: var(--color-accent-emerald);
+  font-weight: 700;
+}
+
+/* Interactive Elements Hover States */
+.workspace-theme button:hover {
+  filter: brightness(1.05);
+}
+
+.workspace-theme button:active {
+  transform: scale(0.98);
+}
+
+/* Disabled State */
+.workspace-theme button:disabled,
+.workspace-theme input:disabled,
+.workspace-theme textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Selection Highlighting */
+.workspace-theme ::selection {
+  background-color: rgba(107, 68, 35, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* Focus Visible for Accessibility */
+.workspace-theme *:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}

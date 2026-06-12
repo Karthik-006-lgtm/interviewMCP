@@ -227,6 +227,7 @@ public class CompanyService {
         };
     }
 
+    @SuppressWarnings("null")
     private User loadUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));

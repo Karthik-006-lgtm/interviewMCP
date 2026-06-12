@@ -20,15 +20,15 @@ export function ReportsPage() {
     <SectionCard title="Reports Dashboard" subtitle="Track score trends, weak areas, and the actions that will improve your next interview round.">
       {error ? <p className="mb-4 text-sm text-rose-600">{error}</p> : null}
       {loading ? (
-        <p className="text-sm text-white/68">Loading reports...</p>
+        <p className="text-sm text-gray-600">Loading reports...</p>
       ) : reports.length ? (
         <div className="grid gap-4 lg:grid-cols-2">
           {reports.map((report) => (
             <article key={report.id} className="app-surface rounded-[1.6rem] p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-display text-xl text-white">{report.title}</h3>
-                  <p className="text-sm text-white/52">
+                  <h3 className="font-display text-xl text-gray-900">{report.title}</h3>
+                  <p className="text-sm text-gray-500">
                     Session #{report.sessionId} | {new Date(report.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -36,13 +36,13 @@ export function ReportsPage() {
                   {Math.round(report.overallScore)}%
                 </span>
               </div>
-              <div className="mt-5 space-y-4 text-sm text-white/76">
+              <div className="mt-5 space-y-4 text-sm text-gray-700">
                 <div>
-                  <p className="font-semibold text-cyan-200">Executive summary</p>
+                  <p className="font-semibold text-teal-700">Executive summary</p>
                   <p className="mt-1">{report.executiveSummary}</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Weak areas</p>
+                  <p className="font-semibold text-teal-700">Weak areas</p>
                   <ul className="mt-2 space-y-2">
                     {report.weakAreas.map((item) => (
                       <li key={item}>- {item}</li>
@@ -50,7 +50,7 @@ export function ReportsPage() {
                   </ul>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Recommended actions</p>
+                  <p className="font-semibold text-teal-700">Recommended actions</p>
                   <ul className="mt-2 space-y-2">
                     {report.recommendedActions.map((item) => (
                       <li key={item}>- {item}</li>
@@ -58,15 +58,15 @@ export function ReportsPage() {
                   </ul>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Progress summary</p>
+                  <p className="font-semibold text-teal-700">Progress summary</p>
                   <p className="mt-1">{report.progressSummary}</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Next steps</p>
+                  <p className="font-semibold text-teal-700">Next steps</p>
                   <p className="mt-1">{report.nextSteps}</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Weekly improvement plan</p>
+                  <p className="font-semibold text-teal-700">Weekly improvement plan</p>
                   <ul className="mt-2 space-y-2">
                     {report.weeklyImprovementPlan.map((item) => (
                       <li key={item}>- {item}</li>
@@ -74,7 +74,7 @@ export function ReportsPage() {
                   </ul>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Practice tasks</p>
+                  <p className="font-semibold text-teal-700">Practice tasks</p>
                   <ul className="mt-2 space-y-2">
                     {report.practiceTasks.map((item) => (
                       <li key={item}>- {item}</li>
@@ -82,7 +82,7 @@ export function ReportsPage() {
                   </ul>
                 </div>
                 <div>
-                  <p className="font-semibold text-cyan-200">Targeted questions</p>
+                  <p className="font-semibold text-teal-700">Targeted questions</p>
                   <ul className="mt-2 space-y-2">
                     {report.targetedQuestions.map((item) => (
                       <li key={item}>- {item}</li>
@@ -94,7 +94,7 @@ export function ReportsPage() {
           ))}
         </div>
       ) : (
-        <p className="app-surface rounded-[1.5rem] p-5 text-sm text-white/68">
+        <p className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-600">
           Reports appear here after you answer interview questions.
         </p>
       )}

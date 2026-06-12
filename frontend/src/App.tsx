@@ -4,12 +4,14 @@ import { ProtectedAdminRoute } from "./components/layout/ProtectedAdminRoute";
 import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
 import { CompanyDetailPage } from "./pages/company/CompanyDetailPage";
+import { CompanyDiscoveryPage } from "./pages/company/CompanyDiscoveryPage";
 import { CompanyMatchesPage } from "./pages/company/CompanyMatchesPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
 import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
 import { DashboardPage } from "./pages/dashboard/DashboardPage";
 import { ReportsPage } from "./pages/dashboard/ReportsPage";
+import { RecordingsPage } from "./pages/dashboard/RecordingsPage";
 import { InterviewPracticePage } from "./pages/interview/InterviewPracticePage";
 import { InterviewSessionPage } from "./pages/interview/InterviewSessionPage";
 import { RoleSelectionPage } from "./pages/roles/RoleSelectionPage";
@@ -35,10 +37,12 @@ export default function App() {
         <Route path="/upload" element={<ResumeUploadPage />} />
         <Route path="/roles" element={<RoleSelectionPage />} />
         <Route path="/companies" element={<CompanyMatchesPage />} />
+        <Route path="/companies/discover" element={<CompanyDiscoveryPage />} />
         <Route path="/companies/:companyId" element={<CompanyDetailPage />} />
         <Route path="/interview" element={<InterviewPracticePage />} />
         <Route path="/interview/session/:sessionId" element={<InterviewSessionPage />} />
         <Route path="/reports" element={<ReportsPage />} />
+        <Route path="/recordings" element={<RecordingsPage />} />
         <Route
           path="/admin"
           element={

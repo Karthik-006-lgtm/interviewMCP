@@ -60,16 +60,18 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
-        String token = jwtService.generateToken(userDetails, Map.of("roles", savedUser.getRoles().stream().map(Enum::name).toList()));
-        return new AuthResponse(token, toProfile(savedUser));
+        String accessToken = jwtService.generateToken(userDetails, Map.of("roles", savedUser.getRoles().stream().map(Enum::name).toList()));
+        String refreshToken = jwtService.generateToken(userDetails, Map.of("roles", savedUser.getRoles().stream().map(Enum::name).toList()));
+        return new AuthResponse(accessToken, refreshToken, toProfile(savedUser));
     }
 
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
         User user = userDetailsService.loadDomainUserByEmail(request.email());
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        String token = jwtService.generateToken(userDetails, Map.of("roles", user.getRoles().stream().map(Enum::name).toList()));
-        return new AuthResponse(token, toProfile(user));
+        String accessToken = jwtService.generateToken(userDetails, Map.of("roles", user.getRoles().stream().map(Enum::name).toList()));
+        String refreshToken = jwtService.generateToken(userDetails, Map.of("roles", user.getRoles().stream().map(Enum::name).toList()));
+        return new AuthResponse(accessToken, refreshToken, toProfile(user));
     }
 
     public UserProfileResponse getProfile(String email) {

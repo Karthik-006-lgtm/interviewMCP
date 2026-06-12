@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +44,7 @@ public class McpToolInvocationService {
         this.webClient = WebClient.builder().build();
     }
 
+    @SuppressWarnings("null")
     public McpInvocationResponse invoke(
             String toolName,
             String actionName,
@@ -119,14 +119,16 @@ public class McpToolInvocationService {
         return buffer.toString();
     }
 
+    @SuppressWarnings("null")
     private String buildUrl(String baseUrl, String resolvedPath, Map<String, Object> input, String method) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl).path(resolvedPath);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl).path(resolvedPath);
         if (HttpMethod.GET.matches(method) || HttpMethod.DELETE.matches(method)) {
             input.forEach((key, value) -> appendQueryParam(builder, key, value));
         }
         return builder.build(true).toUriString();
     }
 
+    @SuppressWarnings("null")
     private void appendQueryParam(UriComponentsBuilder builder, String key, Object value) {
         if (value == null) {
             return;
@@ -138,6 +140,7 @@ public class McpToolInvocationService {
         builder.queryParam(key, value);
     }
 
+    @SuppressWarnings("null")
     private void appendMultipart(MultipartBodyBuilder builder, Map<String, Object> input) {
         input.forEach((key, value) -> {
             if (value == null) {

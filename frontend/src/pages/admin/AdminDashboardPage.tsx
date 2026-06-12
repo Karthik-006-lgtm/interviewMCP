@@ -17,7 +17,7 @@ export function AdminDashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="glass-panel rounded-[1.75rem] p-6 text-white/68">Loading admin telemetry...</div>;
+    return <div className="glass-panel rounded-[1.75rem] p-6 text-gray-600">Loading admin telemetry...</div>;
   }
 
   if (error || !dashboard) {
@@ -50,10 +50,10 @@ export function AdminDashboardPage() {
         <SectionCard title="Recent Users" subtitle="Newest accounts and granted roles.">
           <div className="space-y-3">
             {dashboard.recentUsers.map((user) => (
-              <div key={user.id} className="app-surface rounded-[1.25rem] p-4 text-sm text-white/76">
+              <div key={user.id} className="app-surface rounded-[1.25rem] p-4 text-sm text-gray-700">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-semibold text-white">{user.fullName}</p>
-                  <span className="text-xs uppercase tracking-[0.25em] text-white/45">
+                  <p className="font-semibold text-gray-900">{user.fullName}</p>
+                  <span className="text-xs uppercase tracking-[0.25em] text-gray-500">
                     {new Date(user.createdAt).toLocaleString()}
                   </span>
                 </div>
@@ -73,15 +73,15 @@ export function AdminDashboardPage() {
         <SectionCard title="Recent Resume Uploads" subtitle="Structured resume ingestion health at a glance.">
           <div className="space-y-3">
             {dashboard.recentResumes.map((resume) => (
-              <div key={resume.id} className="app-surface rounded-[1.25rem] p-4 text-sm text-white/76">
+              <div key={resume.id} className="app-surface rounded-[1.25rem] p-4 text-sm text-gray-700">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-semibold text-white">{resume.candidateName || resume.userEmail}</p>
-                  <span className="text-xs uppercase tracking-[0.25em] text-white/45">
+                  <p className="font-semibold text-gray-900">{resume.candidateName || resume.userEmail}</p>
+                  <span className="text-xs uppercase tracking-[0.25em] text-gray-500">
                     {new Date(resume.uploadedAt).toLocaleString()}
                   </span>
                 </div>
                 <p className="mt-2">{resume.originalFileName}</p>
-                <p className="mt-1 text-white/48">{resume.userEmail}</p>
+                <p className="mt-1 text-gray-500">{resume.userEmail}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {resume.recommendedRoles.map((role) => (
                     <span key={role} className="app-chip rounded-full px-3 py-1 text-xs font-medium">
@@ -99,9 +99,9 @@ export function AdminDashboardPage() {
         <SectionCard title="Recent Interview Sessions" subtitle="Track live practice volume and score coverage.">
           <div className="space-y-3">
             {dashboard.recentInterviews.map((session) => (
-              <div key={session.sessionId} className="app-surface rounded-[1.25rem] p-4 text-sm text-white/76">
+              <div key={session.sessionId} className="app-surface rounded-[1.25rem] p-4 text-sm text-gray-700">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-semibold text-white">{session.userEmail}</p>
+                  <p className="font-semibold text-gray-900">{session.userEmail}</p>
                   <span className="app-chip-accent rounded-full px-3 py-1 text-xs font-semibold">
                     {typeof session.overallScore === "number" ? `${Math.round(session.overallScore)}% scored` : "In progress"}
                   </span>
@@ -113,7 +113,7 @@ export function AdminDashboardPage() {
                     </span>
                   ))}
                 </div>
-                <p className="mt-3 text-xs uppercase tracking-[0.25em] text-white/45">
+                <p className="mt-3 text-xs uppercase tracking-[0.25em] text-gray-500">
                   {new Date(session.createdAt).toLocaleString()}
                 </p>
               </div>
@@ -138,8 +138,8 @@ export function AdminDashboardPage() {
 function MetricCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="app-surface rounded-[1.5rem] p-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/45">{label}</p>
-      <p className="mt-3 font-display text-3xl text-cyan-300">{value}</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-500">{label}</p>
+      <p className="mt-3 font-display text-3xl text-teal-700">{value}</p>
     </div>
   );
 }

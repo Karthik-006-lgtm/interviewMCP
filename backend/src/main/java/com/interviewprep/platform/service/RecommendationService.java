@@ -30,6 +30,7 @@ public class RecommendationService {
         this.companyService = companyService;
     }
 
+    @SuppressWarnings("null")
     @Transactional(readOnly = true)
     public RecommendationProfileResponse getProfileRecommendations(Long userId) {
         User user = userRepository.findById(userId)

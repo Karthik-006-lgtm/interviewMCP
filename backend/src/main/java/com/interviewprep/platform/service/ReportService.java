@@ -53,6 +53,7 @@ public class ReportService {
                 .toList();
     }
 
+    @SuppressWarnings("null")
     @Transactional(readOnly = true)
     public DashboardMetricsResponse getDashboardMetrics(Long userId) {
         User user = loadUser(userId);
@@ -84,6 +85,7 @@ public class ReportService {
         );
     }
 
+    @SuppressWarnings("null")
     private User loadUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -112,7 +114,7 @@ public class ReportService {
         Map<String, Integer> counts = new LinkedHashMap<>();
         for (PracticeReportResponse report : reports.stream().limit(5).toList()) {
             for (String weakArea : report.weakAreas()) {
-                counts.merge(weakArea, 1, Integer::sum);
+                counts.merge(weakArea, 1, (a, b) -> a + b);
             }
         }
         return counts.entrySet().stream()

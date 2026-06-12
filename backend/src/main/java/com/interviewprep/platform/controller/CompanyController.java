@@ -28,6 +28,7 @@ public class CompanyController {
         this.authService = authService;
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/match")
     public List<CompanyResponse> matchCompanies(
             Authentication authentication,
@@ -37,6 +38,7 @@ public class CompanyController {
         return companyService.matchCompanies(user.getId(), request.selectedRoles());
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/search")
     public List<CompanyResponse> searchCompanies(
             Authentication authentication,
@@ -49,6 +51,7 @@ public class CompanyController {
         return companyService.searchCompanies(user.getId(), selectedRoles, query, minMatchScore, companySize);
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/{companyId}")
     public CompanyResponse getCompany(Authentication authentication, @PathVariable Long companyId) {
         User user = authService.loadUser(authentication.getName());

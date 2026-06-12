@@ -67,6 +67,7 @@ public class ResumeService {
     @Value("${app.storage.resume-dir}")
     private String resumeStorageDir;
 
+    @SuppressWarnings("null")
     @Transactional
     public ResumeAnalysisResponse uploadResume(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId)
@@ -138,6 +139,7 @@ public class ResumeService {
         return toResponse(saved, analysis.readinessScore());
     }
 
+    @SuppressWarnings("null")
     @Transactional(readOnly = true)
     public ResumeAnalysisResponse getLatestResume(Long userId) {
         User user = userRepository.findById(userId)

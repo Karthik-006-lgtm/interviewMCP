@@ -35,7 +35,7 @@ export function InterviewSessionPage() {
     confidence: "Visual confidence scoring is inactive.",
     nervousness: "Visual nervousness scoring is inactive."
   });
-  const [submittingQuestionId, setSubmittingQuestionId] = useState<number | null>(null);
+  const [submittingQuestionId, setSubmittingQuestionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!sessionId) {
@@ -168,8 +168,8 @@ export function InterviewSessionPage() {
     }));
   };
 
-  const startTimedRound = (questionId: number, durationSeconds: number) => {
-    const questionKey = String(questionId);
+  const startTimedRound = (questionId: string, durationSeconds: number) => {
+    const questionKey = questionId;
     setCountdowns((current) => ({
       ...current,
       [questionKey]: durationSeconds
@@ -181,8 +181,8 @@ export function InterviewSessionPage() {
     appendSimulationMessage(questionKey, `Timed round started: ${durationSeconds}s on the clock.`);
   };
 
-  const resetTimedRound = (questionId: number) => {
-    const questionKey = String(questionId);
+  const resetTimedRound = (questionId: string) => {
+    const questionKey = questionId;
     setCountdowns((current) => {
       const next = { ...current };
       delete next[questionKey];
@@ -199,8 +199,8 @@ export function InterviewSessionPage() {
     }));
   };
 
-  const submitAnswer = async (questionId: number) => {
-    const questionKey = String(questionId);
+  const submitAnswer = async (questionId: string) => {
+    const questionKey = questionId;
     if (audioProcessing[questionKey]) {
       setQuestionErrors((current) => ({
         ...current,
@@ -233,7 +233,7 @@ export function InterviewSessionPage() {
         appendSimulationMessage(questionKey, "Offline reality mode: sending your answer through a simulated unstable connection...");
         await new Promise((resolve) => window.setTimeout(resolve, lagDelayMs));
       }
-      const evaluation = await interviewApi.submitAnswer(questionId, {
+      const evaluation = await interviewApi.submitAnswer(sessionId ?? "", questionId, {
         answerText,
         audioReference: audioReference,
         visualPresenceSignal: cameraModeEnabled ? visualSignals.presence : undefined,
@@ -256,8 +256,8 @@ export function InterviewSessionPage() {
     }
   };
 
-  const requestCoach = async (questionId: number, silenceDetected = false) => {
-    const questionKey = String(questionId);
+  const requestCoach = async (questionId: string, silenceDetected = false) => {
+    const questionKey = questionId;
     setCoachingLoading((current) => ({ ...current, [questionKey]: true }));
     setQuestionErrors((current) => ({ ...current, [questionKey]: "" }));
     try {
@@ -265,7 +265,7 @@ export function InterviewSessionPage() {
         appendSimulationMessage(questionKey, "Coach request is delayed to simulate network instability...");
         await new Promise((resolve) => window.setTimeout(resolve, 800));
       }
-      const coaching = await interviewApi.coachAnswer(questionId, {
+      const coaching = await interviewApi.coachAnswer(sessionId ?? "", questionId, {
         answerDraft: answers[questionKey] ?? audioAnalyses[questionKey]?.transcript ?? "",
         silenceDetected
       });
@@ -287,7 +287,7 @@ export function InterviewSessionPage() {
   };
 
   if (loading) {
-    return <div className="glass-panel rounded-[1.75rem] p-6 text-white/68">Loading interview session...</div>;
+    return <div className="glass-panel rounded-[1.75rem] p-6 text-gray-600">Loading interview session...</div>;
   }
 
   if (!session) {
@@ -324,17 +324,17 @@ export function InterviewSessionPage() {
           </div>
         </div>
         {session.cameraEnabled ? (
-          <div className="mt-4 grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <CameraPresencePanel enabled={session.cameraEnabled} onSignalChange={setVisualSignals} />
+          <div className="mt-4">
             <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">
               <p className="font-semibold text-cyan-200">Simulation engine</p>
               <ul className="mt-3 space-y-2 leading-7">
                 <li>- Company-aware questioning is active for {session.targetCompanyName || "general practice"}.</li>
                 <li>- Time pressure, interruptions, and speaker rotation adapt to the selected reality mode.</li>
                 <li>- Live coaching and adaptive difficulty stay independent, so existing answer scoring still works.</li>
+                <li>- <span className="text-cyan-300 font-semibold">Camera is floating</span> - drag it anywhere on the screen for your convenience.</li>
               </ul>
               <div className="mt-5 rounded-[1rem] bg-white/5 p-4">
-                <p className="font-semibold text-white">Visual analysis read</p>
+                <p className="font-semibold text-white">Visual analysis summary</p>
                 <p className="mt-2">Presence: {visualSignals.presence}</p>
                 <p className="mt-2">Eye contact: {visualSignals.eyeContact}</p>
                 <p className="mt-2">Confidence: {visualSignals.confidence}</p>
@@ -345,8 +345,10 @@ export function InterviewSessionPage() {
         ) : null}
       </SectionCard>
 
-      <div className="space-y-5">
-        {session.questions.map((question, index) => {
+      {/* Floating draggable camera panel */}
+      {session.cameraEnabled && <CameraPresencePanel enabled={session.cameraEnabled} onSignalChange={setVisualSignals} />}
+
+      <div className="space-y-5">{session.questions.map((question, index) => {
           const evaluation = evaluations[String(question.id)];
           const audioAnalysis = audioAnalyses[String(question.id)];
           const questionKey = String(question.id);
@@ -453,7 +455,8 @@ export function InterviewSessionPage() {
                 />
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-3">
+              {/* All action buttons in one horizontal line */}
+              <div className="mt-4 flex flex-wrap items-center gap-3">
                 {session.liveCoachingEnabled ? (
                   <>
                     <button
@@ -474,6 +477,18 @@ export function InterviewSessionPage() {
                     </button>
                   </>
                 ) : null}
+                <button
+                  type="button"
+                  onClick={() => submitAnswer(question.id)}
+                  disabled={submittingQuestionId === question.id || isAudioProcessing}
+                  className="app-button-primary rounded-full px-5 py-3 text-sm font-medium transition disabled:opacity-70"
+                >
+                  {submittingQuestionId === question.id
+                    ? "Scoring answer..."
+                    : isAudioProcessing
+                      ? "Analyzing voice answer..."
+                      : "Submit answer"}
+                </button>
               </div>
 
               {questionError ? <p className="mt-4 text-sm text-rose-600">{questionError}</p> : null}
@@ -505,19 +520,6 @@ export function InterviewSessionPage() {
                   </div>
                 </div>
               ) : null}
-
-              <button
-                type="button"
-                onClick={() => submitAnswer(question.id)}
-                disabled={submittingQuestionId === question.id || isAudioProcessing}
-                className="app-button-primary mt-5 rounded-full px-5 py-3 text-sm font-medium transition disabled:opacity-70"
-              >
-                {submittingQuestionId === question.id
-                  ? "Scoring answer..."
-                  : isAudioProcessing
-                    ? "Analyzing voice answer..."
-                    : "Submit answer"}
-              </button>
 
               {evaluation ? (
                 <div className="mt-5 grid gap-4 xl:grid-cols-3">

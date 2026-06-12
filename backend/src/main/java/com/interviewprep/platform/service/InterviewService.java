@@ -78,6 +78,7 @@ public class InterviewService {
         this.speechProcessingService = speechProcessingService;
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public InterviewSessionResponse createSession(@NonNull Long userId, @NonNull InterviewSessionRequest request) {
         User user = loadUser(userId);
@@ -550,6 +551,7 @@ public class InterviewService {
         return StringUtils.hasText(value) ? value : "";
     }
 
+    @SuppressWarnings("null")
     private User loadUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));

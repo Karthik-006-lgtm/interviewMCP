@@ -42,6 +42,7 @@ public class InterviewController {
         this.authService = authService;
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/sessions")
     public InterviewSessionResponse createSession(
             Authentication authentication,
@@ -51,6 +52,7 @@ public class InterviewController {
         return interviewService.createSession(user.getId(), request);
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/sessions/{sessionId}")
     public InterviewSessionResponse getSession(
             Authentication authentication,
@@ -60,6 +62,7 @@ public class InterviewController {
         return interviewService.getSession(user.getId(), sessionId);
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/questions/{questionId}/answer")
     public AnswerEvaluationResponse submitAnswer(
             Authentication authentication,
@@ -70,6 +73,7 @@ public class InterviewController {
         return interviewService.submitAnswer(user.getId(), questionId, request);
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/questions/{questionId}/coach")
     public LiveCoachingResponse coachAnswer(
             Authentication authentication,

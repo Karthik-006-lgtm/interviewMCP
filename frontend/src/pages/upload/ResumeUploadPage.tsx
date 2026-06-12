@@ -73,13 +73,13 @@ export function ResumeUploadPage() {
     <div className="space-y-6">
       <SectionCard title="Resume Studio" subtitle="Upload your latest PDF or DOCX and convert it into a complete interview-prep profile.">
         <form onSubmit={handleUpload} className="grid gap-4 lg:grid-cols-[1fr_auto]">
-          <label className="rounded-[1.5rem] border border-dashed border-cyan-300/35 bg-white/5 p-6">
-            <span className="font-display text-xl text-white">Select resume file</span>
+          <label className="rounded-[1.5rem] border border-dashed border-teal-600/35 bg-white/60 p-6">
+            <span className="font-display text-xl text-gray-900">Select resume file</span>
             <p className="app-muted mt-2 text-sm">Supported formats: PDF, DOCX</p>
             <input
               type="file"
               accept=".pdf,.docx"
-              className="mt-4 block w-full text-sm text-white/85"
+              className="mt-4 block w-full text-sm text-gray-800"
               onChange={(event) => {
                 const nextFile = event.target.files?.[0] ?? null;
                 setSelectedFile(nextFile);
@@ -104,8 +104,8 @@ export function ResumeUploadPage() {
               messageTone === "error"
                 ? "text-rose-600"
                 : messageTone === "success"
-                  ? "text-cyan-300"
-                  : "text-white/70"
+                  ? "text-teal-600"
+                  : "text-gray-700"
             }`}
           >
             {message}
@@ -119,12 +119,12 @@ export function ResumeUploadPage() {
             <SectionCard title="Candidate Snapshot" subtitle={analysis.originalFileName}>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="app-surface rounded-[1.5rem] p-5">
-                  <p className="font-display text-lg text-white">{analysis.candidateName || "Detected profile"}</p>
-                  <p className="mt-4 text-4xl font-bold text-cyan-300">{Math.round(analysis.readinessScore)}%</p>
+                  <p className="font-display text-lg text-gray-900">{analysis.candidateName || "Detected profile"}</p>
+                  <p className="mt-4 text-4xl font-bold text-teal-700">{Math.round(analysis.readinessScore)}%</p>
                   <p className="app-muted mt-4 text-sm">{analysis.summary}</p>
                 </div>
                 <div className="app-surface rounded-[1.5rem] p-5">
-                  <p className="font-display text-lg text-white">Contact info</p>
+                  <p className="font-display text-lg text-gray-900">Contact info</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {analysis.contactInfo.map((item) => (
                       <span key={item} className="app-chip rounded-full px-3 py-2 text-sm font-medium">
@@ -132,7 +132,7 @@ export function ResumeUploadPage() {
                       </span>
                     ))}
                   </div>
-                  <p className="mt-5 font-display text-lg text-white">Extracted skills</p>
+                  <p className="mt-5 font-display text-lg text-gray-900">Extracted skills</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {analysis.extractedSkills.map((skill) => (
                       <span key={skill} className="app-chip rounded-full px-3 py-2 text-sm font-medium">
@@ -147,7 +147,7 @@ export function ResumeUploadPage() {
             <SectionCard title="Interview Strategy" subtitle="Your role fit, skill gaps, and mentor direction.">
               <div className="space-y-4">
                 <div className="app-surface rounded-[1.5rem] p-5">
-                  <p className="font-display text-lg text-white">Recommended roles</p>
+                  <p className="font-display text-lg text-gray-900">Recommended roles</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {analysis.recommendedRoles.map((role) => (
                       <span key={role} className="app-chip-secondary rounded-full px-3 py-2 text-sm font-medium">
@@ -157,7 +157,7 @@ export function ResumeUploadPage() {
                   </div>
                 </div>
                 <div className="app-surface rounded-[1.5rem] p-5">
-                  <p className="font-display text-lg text-white">Missing skills</p>
+                  <p className="font-display text-lg text-gray-900">Missing skills</p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {analysis.missingSkills.length ? (
                       analysis.missingSkills.map((skill) => (
@@ -170,8 +170,8 @@ export function ResumeUploadPage() {
                     )}
                   </div>
                 </div>
-                <div className="app-surface rounded-[1.5rem] p-5 text-sm leading-7 text-white/82">
-                  <p className="font-display text-lg text-white">Mentor guidance</p>
+                <div className="app-surface rounded-[1.5rem] p-5 text-sm leading-7 text-gray-700">
+                  <p className="font-display text-lg text-gray-900">Mentor guidance</p>
                   <p className="mt-3">{analysis.mentorGuidance}</p>
                 </div>
               </div>

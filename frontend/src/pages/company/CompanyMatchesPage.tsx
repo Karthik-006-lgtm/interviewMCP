@@ -98,15 +98,15 @@ export function CompanyMatchesPage() {
                 onClick={() => toggleRole(role.name)}
                 className={`rounded-[1.5rem] border p-5 text-left transition ${
                   active
-                    ? "border-cyan-300/45 bg-cyan-300/12 text-white shadow-[0_20px_40px_rgba(30,214,255,0.12)]"
-                    : "app-surface text-white hover:-translate-y-0.5 hover:border-cyan-300/28"
+                    ? "border-teal-600/45 bg-teal-600/12 text-gray-900 shadow-[0_20px_40px_rgba(110,207,164,0.18)]"
+                    : "app-surface text-gray-700 hover:-translate-y-0.5 hover:border-teal-600/28"
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-display text-xl text-white">{role.name}</p>
-                  {active ? <span className="rounded-full bg-cyan-300 px-3 py-1 text-xs font-semibold text-slate-950">Selected</span> : null}
+                  <p className="font-display text-xl text-gray-900">{role.name}</p>
+                  {active ? <span className="rounded-full bg-teal-600 px-3 py-1 text-xs font-semibold text-white">Selected</span> : null}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-white/70">{role.summary}</p>
+                <p className="mt-3 text-sm leading-7 text-gray-700">{role.summary}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {role.coreSkills.map((skill) => (
                     <span key={skill} className="app-chip rounded-full px-3 py-2 text-xs font-medium">
@@ -118,6 +118,23 @@ export function CompanyMatchesPage() {
             );
           })}
         </div>
+      </SectionCard>
+
+      <SectionCard
+        title="Discover a company"
+        subtitle="Add a new target company and build a live profile from official public sources."
+        action={
+          <Link
+            to="/companies/discover"
+            className="app-button-primary rounded-full px-4 py-2 text-sm font-medium transition"
+          >
+            Discover company
+          </Link>
+        }
+      >
+        <p className="text-sm leading-7 text-gray-700">
+          If a target company is missing from your match list, discover it by name, website, or domain so you can review it and refresh the latest intelligence.
+        </p>
       </SectionCard>
 
       <SectionCard
@@ -134,8 +151,8 @@ export function CompanyMatchesPage() {
         }
       >
         <div className="app-surface mb-5 grid gap-4 rounded-[1.5rem] p-5 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
-          <label className="space-y-2 text-sm text-white/68">
-            <span className="font-medium text-white">Search companies or roles</span>
+          <label className="space-y-2 text-sm text-gray-600">
+            <span className="font-medium text-gray-900">Search companies or roles</span>
             <input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
@@ -143,8 +160,8 @@ export function CompanyMatchesPage() {
               className="w-full rounded-[1rem] border px-4 py-3 outline-none transition"
             />
           </label>
-          <label className="space-y-2 text-sm text-white/68">
-            <span className="font-medium text-white">Minimum fit score</span>
+          <label className="space-y-2 text-sm text-gray-600">
+            <span className="font-medium text-gray-900">Minimum fit score</span>
             <select
               value={String(minMatchScore)}
               onChange={(event) => setMinMatchScore(Number(event.target.value))}
@@ -156,8 +173,8 @@ export function CompanyMatchesPage() {
               <option value="80">80%+</option>
             </select>
           </label>
-          <label className="space-y-2 text-sm text-white/68">
-            <span className="font-medium text-white">Company size</span>
+          <label className="space-y-2 text-sm text-gray-600">
+            <span className="font-medium text-gray-900">Company size</span>
             <select
               value={companySize}
               onChange={(event) => setCompanySize(event.target.value)}
@@ -173,18 +190,21 @@ export function CompanyMatchesPage() {
 
         {error ? <p className="mb-4 text-sm text-rose-600">{error}</p> : null}
         {loading ? (
-          <p className="text-sm text-white/68">Loading company matches...</p>
+          <p className="text-sm text-gray-600">Loading company matches...</p>
         ) : companies.length ? (
           <div className="grid gap-4 lg:grid-cols-2">
             {companies.map((company) => (
               <article key={company.id} className="app-surface rounded-[1.75rem] p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="font-display text-2xl text-white">{company.name}</h3>
-                    <p className="mt-1 text-sm text-white/55">{company.website}</p>
+                    <h3 className="font-display text-2xl text-gray-900">{company.name}</h3>
+                    <p className="mt-1 text-sm text-gray-600">{company.website || company.industry || "Company profile"}</p>
+                    <p className="mt-2 text-xs text-gray-500">
+                      {company.industry || "Industry unknown"} • {company.size || "Size unknown"}
+                    </p>
                   </div>
                   <span className="app-chip-accent rounded-full px-3 py-2 text-sm font-semibold">
-                    {Math.round(company.matchScore)}% fit
+                    {company.matchScore !== undefined ? `${Math.round(company.matchScore)}% fit` : "Fit score unknown"}
                   </span>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -194,8 +214,8 @@ export function CompanyMatchesPage() {
                     </span>
                   ))}
                 </div>
-                <p className="mt-4 text-sm leading-7 text-white/78">{company.whyUserMatches}</p>
-                <p className="mt-4 text-sm text-white/62">{company.culture}</p>
+                <p className="mt-4 text-sm leading-7 text-gray-700">{company.whyUserMatches}</p>
+                <p className="mt-4 text-sm text-gray-600">{company.culture}</p>
                 <Link
                   to={`/companies/${company.id}`}
                   className="app-button-primary mt-5 inline-flex rounded-full px-4 py-2 text-sm font-medium transition"
@@ -206,7 +226,7 @@ export function CompanyMatchesPage() {
             ))}
           </div>
         ) : (
-          <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/68">
+          <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-600">
             No companies match the current role selection and filter set yet. Try adjusting your filters or adding another adjacent role.
           </div>
         )}

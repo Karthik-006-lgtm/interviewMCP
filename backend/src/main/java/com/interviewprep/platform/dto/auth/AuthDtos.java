@@ -34,7 +34,8 @@ public final class AuthDtos {
     }
 
     public record AuthResponse(
-            String token,
+            String access_token,
+            String refresh_token,
             UserProfileResponse user
     ) {
     }

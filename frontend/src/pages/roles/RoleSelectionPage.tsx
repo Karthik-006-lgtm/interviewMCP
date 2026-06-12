@@ -59,7 +59,7 @@ export function RoleSelectionPage() {
   );
 
   if (loading) {
-    return <div className="glass-panel rounded-[1.75rem] p-6 text-white/75">Loading role recommendations...</div>;
+    return <div className="glass-panel rounded-[1.75rem] p-6 text-gray-700">Loading role recommendations...</div>;
   }
 
   return (
@@ -93,7 +93,7 @@ export function RoleSelectionPage() {
         {error ? <p className="mb-4 text-sm text-rose-600">{error}</p> : null}
         {suggestedRoles.length ? (
           <div className="app-surface mb-5 rounded-[1.5rem] p-5">
-            <p className="font-display text-lg text-white">Suggested roles from your profile</p>
+            <p className="font-display text-lg text-gray-900">Suggested roles from your profile</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {suggestedRoles.map((role) => (
                 <span key={role} className="app-chip rounded-full px-3 py-2 text-sm font-medium">
@@ -115,30 +115,30 @@ export function RoleSelectionPage() {
                 onClick={() => toggleRole(role.name)}
                 className={`rounded-[1.5rem] border p-5 text-left transition ${
                   active
-                    ? "border-cyan-300/45 bg-cyan-300/12 text-white shadow-[0_24px_45px_rgba(30,214,255,0.12)]"
-                    : "app-surface text-white/78 hover:-translate-y-0.5 hover:border-cyan-300/30"
+                    ? "border-teal-600/45 bg-teal-600/12 text-gray-900 shadow-[0_24px_45px_rgba(110,207,164,0.18)]"
+                    : "app-surface text-gray-700 hover:-translate-y-0.5 hover:border-teal-600/30"
                 }`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-display text-xl">{role.name}</p>
                   <div className="flex gap-2">
                     {suggested ? (
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${active ? "bg-white/15 text-white" : "app-chip"}`}>
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${active ? "bg-white/20 text-gray-900" : "app-chip"}`}>
                         Suggested
                       </span>
                     ) : null}
                     {active ? (
-                      <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white">Selected</span>
+                      <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-gray-900">Selected</span>
                     ) : null}
                   </div>
                 </div>
-                <p className={`mt-3 text-sm leading-7 ${active ? "text-white/90" : "text-white/68"}`}>{role.summary}</p>
+                <p className={`mt-3 text-sm leading-7 ${active ? "text-gray-800" : "text-gray-600"}`}>{role.summary}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {role.coreSkills.map((skill) => (
                     <span
                       key={skill}
                       className={`rounded-full px-3 py-2 text-xs font-medium ${
-                        active ? "bg-white/15 text-white" : "app-chip"
+                        active ? "bg-white/20 text-gray-900" : "app-chip"
                       }`}
                     >
                       {skill}
@@ -159,7 +159,7 @@ export function RoleSelectionPage() {
           <Link to="/interview" className="app-button-secondary rounded-full px-5 py-3 text-sm font-medium transition">
             Start interview practice
           </Link>
-          <p className="text-sm text-white/65">
+          <p className="text-sm text-gray-600">
             Current selection: {selectedRoles.length ? selectedRoles.join(", ") : "No roles selected yet"}
           </p>
         </div>

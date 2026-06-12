@@ -30,7 +30,7 @@ export function InterviewPracticePage() {
   const [personalityProfile, setPersonalityProfile] = useState(personalityOptions[0]);
   const [technicalFocus, setTechnicalFocus] = useState("");
   const [matchedCompanies, setMatchedCompanies] = useState<Company[]>([]);
-  const [selectedCompanyId, setSelectedCompanyId] = useState<number | undefined>(undefined);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | undefined>(undefined);
   const [interviewerTone, setInterviewerTone] = useState(interviewerToneOptions[0]);
   const [coachingIntensity, setCoachingIntensity] = useState(coachingIntensityOptions[1]);
   const [liveCoachingEnabled, setLiveCoachingEnabled] = useState(true);
@@ -129,12 +129,12 @@ export function InterviewPracticePage() {
                     onClick={() => toggleRole(role.name)}
                     className={`rounded-[1.5rem] border p-5 text-left transition ${
                     active
-                      ? "border-cyan-300/45 bg-cyan-300/12 text-white shadow-[0_20px_40px_rgba(30,214,255,0.12)]"
-                      : "app-surface text-white/72 hover:-translate-y-0.5 hover:border-cyan-300/28"
+                      ? "border-teal-600/45 bg-teal-600/12 text-gray-900 shadow-[0_20px_40px_rgba(110,207,164,0.18)]"
+                      : "app-surface text-gray-700 hover:-translate-y-0.5 hover:border-teal-600/28"
                     }`}
                   >
                     <p className="font-display text-xl">{role.name}</p>
-                    <p className={`mt-3 text-sm leading-7 ${active ? "text-white/90" : "text-white/64"}`}>
+                    <p className={`mt-3 text-sm leading-7 ${active ? "text-gray-800" : "text-gray-600"}`}>
                       {role.summary}
                     </p>
                   </button>
@@ -145,7 +145,7 @@ export function InterviewPracticePage() {
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Personality profile</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Personality profile</span>
               <select
                 value={personalityProfile}
                 onChange={(event) => setPersonalityProfile(event.target.value)}
@@ -159,7 +159,7 @@ export function InterviewPracticePage() {
               </select>
             </label>
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Technical focus</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Technical focus</span>
               <input
                 type="text"
                 placeholder="Example: system design, Spring Boot, PostgreSQL"
@@ -172,10 +172,10 @@ export function InterviewPracticePage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Target company simulation</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Target company simulation</span>
               <select
                 value={selectedCompanyId ?? ""}
-                onChange={(event) => setSelectedCompanyId(event.target.value ? Number(event.target.value) : undefined)}
+                onChange={(event) => setSelectedCompanyId(event.target.value || undefined)}
                 className="w-full rounded-2xl border px-4 py-3 outline-none transition"
               >
                 <option value="">General interview mode</option>
@@ -185,7 +185,7 @@ export function InterviewPracticePage() {
                   </option>
                 ))}
               </select>
-              <p className="mt-2 text-xs text-white/50">
+              <p className="mt-2 text-xs text-gray-500">
                 {companyLoading
                   ? "Loading role-matched companies..."
                   : selectedCompanyId
@@ -195,7 +195,7 @@ export function InterviewPracticePage() {
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Interviewer tone</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Interviewer tone</span>
               <select
                 value={interviewerTone}
                 onChange={(event) => setInterviewerTone(event.target.value)}
@@ -210,7 +210,7 @@ export function InterviewPracticePage() {
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Coaching intensity</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Coaching intensity</span>
               <select
                 value={coachingIntensity}
                 onChange={(event) => setCoachingIntensity(event.target.value)}
@@ -227,7 +227,7 @@ export function InterviewPracticePage() {
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-white/70">Reality mode</span>
+              <span className="mb-2 block text-sm font-medium text-gray-700">Reality mode</span>
               <select
                 value={realityMode}
                 onChange={(event) => setRealityMode(event.target.value)}
@@ -241,7 +241,7 @@ export function InterviewPracticePage() {
               </select>
             </label>
 
-            <label className="app-surface flex items-center justify-between rounded-[1.5rem] px-4 py-4 text-sm text-white/76">
+            <label className="app-surface flex items-center justify-between rounded-[1.5rem] px-4 py-4 text-sm text-gray-700">
               <span>Live AI coach</span>
               <input
                 type="checkbox"
@@ -274,12 +274,12 @@ export function InterviewPracticePage() {
 
           {resume ? (
             <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-              <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">
-                <p className="font-semibold text-white">Resume signal</p>
+              <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+                <p className="font-semibold text-gray-900">Resume signal</p>
                 <p className="mt-2 leading-7">{resume.summary}</p>
               </div>
-              <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">
-                <p className="font-semibold text-white">Focus areas to reinforce</p>
+              <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+                <p className="font-semibold text-gray-900">Focus areas to reinforce</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {(resume.missingSkills.length ? resume.missingSkills : resume.extractedSkills.slice(0, 4)).map((item) => (
                     <span key={item} className="app-chip-accent rounded-full px-3 py-2 text-xs font-medium">
@@ -292,23 +292,23 @@ export function InterviewPracticePage() {
           ) : null}
 
           <div className="grid gap-4 lg:grid-cols-3">
-            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/76">
-              <p className="font-semibold text-cyan-200">Simulation engine</p>
+            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+              <p className="font-semibold text-teal-700">Simulation engine</p>
               <p className="mt-2 leading-7">
                 The interviewer will use {interviewerTone.toLowerCase()}, {realityMode.toLowerCase()}, and company context
                 to change tone, follow-ups, and time pressure.
               </p>
             </div>
-            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/76">
-              <p className="font-semibold text-cyan-200">Coaching mode</p>
+            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+              <p className="font-semibold text-teal-700">Coaching mode</p>
               <p className="mt-2 leading-7">
                 {liveCoachingEnabled
                   ? `Live hints are enabled with ${coachingIntensity.toLowerCase()} support.`
                   : "Live hints are disabled for a more realistic pressure round."}
               </p>
             </div>
-            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/76">
-              <p className="font-semibold text-cyan-200">Difficulty pacing</p>
+            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+              <p className="font-semibold text-teal-700">Difficulty pacing</p>
               <p className="mt-2 leading-7">
                 {adaptiveDifficultyEnabled
                   ? "Difficulty will climb or soften in real time based on how you answer."
@@ -318,8 +318,8 @@ export function InterviewPracticePage() {
           </div>
 
           {cameraEnabled ? (
-            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/76">
-              <p className="font-semibold text-cyan-200">Camera emotion mode</p>
+            <div className="app-surface rounded-[1.5rem] p-5 text-sm text-gray-700">
+              <p className="font-semibold text-teal-700">Camera emotion mode</p>
               <p className="mt-2 leading-7">
                 The interview session will request camera access for a live preview and browser-side visual presence checks,
                 while voice confidence and emotion scoring continue through the speech pipeline.

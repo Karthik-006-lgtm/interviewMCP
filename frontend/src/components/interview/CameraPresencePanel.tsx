@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 interface FaceBoundsLike {
   width?: number;
 }
@@ -38,12 +43,26 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
   const monitorHandleRef = useRef<number | null>(null);
   const previousFaceWidthRef = useRef<number | null>(null);
   const missingFramesRef = useRef(0);
-
+  
+  // Video recording
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordedChunksRef = useRef<Blob[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const recordingTimerRef = useRef<number | null>(null);
+  
   const [status, setStatus] = useState("Camera mode is off for this session.");
   const [presenceSignal, setPresenceSignal] = useState("Voice-based emotion analysis only.");
   const [eyeContactProxy, setEyeContactProxy] = useState("Enable camera mode to add visual presence checks.");
   const [confidenceSignal, setConfidenceSignal] = useState("Visual confidence scoring is inactive.");
   const [nervousnessSignal, setNervousnessSignal] = useState("Visual nervousness scoring is inactive.");
+  
+  // Draggable state
+  const [position, setPosition] = useState<Position>({ x: 20, y: 20 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
+  const [isMinimized, setIsMinimized] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const publishSignals = (
     presence: string,
@@ -236,26 +255,214 @@ export function CameraPresencePanel({ enabled, onSignalChange }: CameraPresenceP
     }
   };
 
+  // Start recording video
+  const startRecording = () => {
+    if (!streamRef.current) return;
+
+    try {
+      const options = {
+        mimeType: 'video/webm;codecs=vp9',
+      };
+      
+      // Fallback for Safari/browsers that don't support vp9
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options.mimeType = 'video/webm';
+      }
+
+      const mediaRecorder = new MediaRecorder(streamRef.current, options);
+      recordedChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        await saveRecording(blob);
+      };
+
+      mediaRecorder.start(1000); // Collect data every second
+      mediaRecorderRef.current = mediaRecorder;
+      setIsRecording(true);
+
+      // Start duration timer
+      recordingTimerRef.current = window.setInterval(() => {
+        setRecordingDuration((prev) => prev + 1);
+      }, 1000);
+
+      console.log('Video recording started');
+    } catch (error) {
+      console.error('Failed to start recording:', error);
+    }
+  };
+
+  // Stop recording video
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current = null;
+      setIsRecording(false);
+
+      if (recordingTimerRef.current) {
+        window.clearInterval(recordingTimerRef.current);
+        recordingTimerRef.current = null;
+      }
+
+      console.log('Video recording stopped');
+    }
+  };
+
+  // Save recording to backend
+  const saveRecording = async (blob: Blob) => {
+    try {
+      const formData = new FormData();
+      const fileName = `interview-recording-${Date.now()}.webm`;
+      formData.append('video', blob, fileName);
+
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8080/api/interviews/recordings/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('Recording saved successfully');
+        setRecordingDuration(0);
+        recordedChunksRef.current = [];
+      } else {
+        console.error('Failed to save recording');
+      }
+    } catch (error) {
+      console.error('Error saving recording:', error);
+    }
+  };
+
+  // Auto-start recording when camera starts
+  useEffect(() => {
+    if (enabled && streamRef.current && !isRecording) {
+      // Small delay to ensure stream is ready
+      const timer = setTimeout(() => {
+        startRecording();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [enabled, streamRef.current]);
+
+  // Auto-stop recording when component unmounts or disabled
+  useEffect(() => {
+    return () => {
+      if (isRecording) {
+        stopRecording();
+      }
+    };
+  }, [isRecording]);
+
+  // Dragging functionality
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    setIsDragging(true);
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    
+    const newX = e.clientX - dragOffset.x;
+    const newY = e.clientY - dragOffset.y;
+    
+    // Constrain to viewport
+    const maxX = window.innerWidth - (containerRef.current?.offsetWidth || 400);
+    const maxY = window.innerHeight - (containerRef.current?.offsetHeight || 300);
+    
+    setPosition({
+      x: Math.max(0, Math.min(newX, maxX)),
+      y: Math.max(0, Math.min(newY, maxY)),
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset]);
+
+  // Format duration as MM:SS
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="app-surface rounded-[1.5rem] p-5 text-sm text-white/78">
-      <p className="font-semibold text-cyan-200">Camera presence mode</p>
-      <p className="mt-2 leading-7">{status}</p>
-      <div className="mt-4 overflow-hidden rounded-[1.25rem] border border-white/10 bg-black/35">
-        <video ref={videoRef} className="aspect-video w-full object-cover" autoPlay muted playsInline />
-      </div>
-      <div className="mt-4 space-y-2">
-        <p>
-          <span className="font-semibold text-white">Presence:</span> {presenceSignal}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Eye-contact proxy:</span> {eyeContactProxy}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Confidence cue:</span> {confidenceSignal}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Nervousness cue:</span> {nervousnessSignal}
-        </p>
+    <div
+      ref={containerRef}
+      className="fixed z-50 shadow-2xl"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        width: isMinimized ? '200px' : '320px',
+        cursor: isDragging ? 'grabbing' : 'grab',
+      }}
+    >
+      <div className="bg-gray-900/95 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 shadow-xl">
+        {/* Draggable Header */}
+        <div
+          className="bg-gray-800/90 px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+        >
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            <p className="font-medium text-white text-xs">Camera</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="text-white/70 hover:text-white transition text-xs px-1.5"
+            title={isMinimized ? "Expand" : "Minimize"}
+          >
+            {isMinimized ? "□" : "−"}
+          </button>
+        </div>
+
+        {/* Video Feed */}
+        <div className="relative">
+          <video
+            ref={videoRef}
+            className="w-full object-cover"
+            style={{ height: isMinimized ? '150px' : '240px' }}
+            autoPlay
+            muted
+            playsInline
+          />
+          {/* Recording status overlay */}
+          <div className="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-[10px] text-white font-mono flex items-center gap-1.5">
+            {isRecording && (
+              <>
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                <span>REC {formatDuration(recordingDuration)}</span>
+              </>
+            )}
+            {!isRecording && <span className="text-white/50">READY</span>}
+          </div>
+        </div>
       </div>
     </div>
   );

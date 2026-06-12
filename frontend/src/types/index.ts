@@ -1,14 +1,30 @@
 export interface UserProfile {
-  id: number;
-  fullName: string;
+  id: string;
   email: string;
-  roles: string[];
+  first_name: string;
+  last_name: string;
+  fullName: string;
+  is_active: boolean;
+  email_verified: boolean;
+  created_at: string;
   createdAt: string;
+  last_login?: string;
+  roles?: string[];
 }
 
 export interface AuthResponse {
-  token: string;
   user: UserProfile;
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  token_type: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  token_type: string;
 }
 
 export interface ResumeAnalysis {
@@ -36,19 +52,54 @@ export interface ResumeAnalysis {
 }
 
 export interface Company {
-  id: number;
+  id: string;
   name: string;
-  website: string;
-  hrContact: string;
-  hiringManager: string;
-  ownerName: string;
-  employeeCount: number;
-  companyHistory: string;
-  culture: string;
+  domain?: string;
+  description?: string;
+  website?: string;
+  industry?: string;
+  size?: string;
+  foundedYear?: number;
+  headquarters?: string;
+  careersUrl?: string;
+  revenueRange?: string;
+  fundingStage?: string;
+  hrContact?: string;
+  hiringManager?: string;
+  ownerName?: string;
+  employeeCount?: number;
+  companyHistory?: string;
+  culture?: string;
   supportedRoles: string[];
   interviewFocusAreas: string[];
-  whyUserMatches: string;
-  matchScore: number;
+  whyUserMatches?: string;
+  matchScore?: number;
+}
+
+export interface CompanyProfile extends Company {
+  leadership?: Array<{ name: string; title?: string; url?: string }>;
+  products?: string[];
+  techStack?: string[];
+  officialLinks?: Array<{ platform: string; url: string; isPrimary?: boolean }>;
+  opportunities?: Array<{
+    title: string;
+    role: string;
+    location?: string;
+    employmentType?: string;
+    experienceLevel?: string;
+    description?: string;
+    requirements?: string[];
+    responsibilities?: string[];
+    skillsRequired?: string[];
+    isActive?: boolean;
+    applicationDeadline?: string;
+    postedDate?: string;
+    source?: string;
+    sourceUrl?: string;
+    timing?: string;
+  }>;
+  intelligenceSources?: string[];
+  lastEnrichedAt?: string;
 }
 
 export interface RoleProfile {
@@ -72,7 +123,7 @@ export interface RecommendationProfile {
 }
 
 export interface InterviewQuestion {
-  id: number;
+  id: string;
   prompt: string;
   category: string;
   difficulty: string;
@@ -81,7 +132,7 @@ export interface InterviewQuestion {
 }
 
 export interface InterviewSession {
-  sessionId: number;
+  sessionId: string;
   selectedRoles: string[];
   personalityProfile: string;
   technicalSkills: string;
@@ -100,7 +151,7 @@ export interface InterviewSession {
 }
 
 export interface AnswerEvaluation {
-  answerId: number;
+  answerId: string;
   correctnessScore: number;
   confidenceScore: number;
   relevanceScore: number;

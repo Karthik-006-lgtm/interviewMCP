@@ -25,7 +25,7 @@ export function ProtectedAdminRoute({ children }: PropsWithChildren) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user.roles.includes("ADMIN")) {
+  if (!(user.roles ?? []).includes("ADMIN")) {
     return <Navigate to="/forbidden" replace />;
   }
 

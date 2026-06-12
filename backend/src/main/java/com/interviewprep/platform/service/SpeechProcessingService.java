@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
@@ -44,6 +43,7 @@ public class SpeechProcessingService {
         this.aiOrchestrationService = aiOrchestrationService;
     }
 
+    @SuppressWarnings("null")
     public AudioProcessingResponse uploadAndAnalyzeAudio(
             Long userId,
             MultipartFile file,
@@ -113,6 +113,7 @@ public class SpeechProcessingService {
         return resolvedPath;
     }
 
+    @SuppressWarnings("null")
     private void validateAudio(MultipartFile file) {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Audio file cannot be empty");
@@ -128,7 +129,7 @@ public class SpeechProcessingService {
         if (StringUtils.hasText(file.getContentType())) {
             String contentType = file.getContentType().toLowerCase(Locale.ROOT).split(";", 2)[0].trim();
             if (!SUPPORTED_AUDIO_CONTENT_TYPES.contains(contentType)) {
-                throw new IllegalArgumentException("Unsupported audio content type: " + file.getContentType());
+                throw new IllegalArgumentException("Unsupported audio content type: " + contentType);
             }
         }
     }

@@ -59,6 +59,7 @@ class AuthServiceTest {
         );
     }
 
+    @SuppressWarnings("null")
     @Test
     void registerCreatesEncodedUserAndReturnsToken() {
         RegisterRequest request = new RegisterRequest("Jane Doe", "jane@example.com", "SecurePass123");
@@ -82,7 +83,7 @@ class AuthServiceTest {
         assertEquals("jane@example.com", new JwtService(
                 "ZmFrZV9kZXZfb25seV9zZWNyZXRfZmFrZV9kZXZfb25seV9zZWNyZXRfZmFrZQ==",
                 60000L
-        ).extractUsername(response.token()));
+        ).extractUsername(response.access_token()));
         verify(passwordEncoder).encode("SecurePass123");
         verify(userRepository).save(any(User.class));
     }
