@@ -188,7 +188,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       className="workspace-theme relative min-h-screen overflow-hidden"
       style={{
         backgroundImage:
-          "radial-gradient(circle at 15% 18%, rgba(148, 137, 121, 0.2), transparent 28%), radial-gradient(circle at 82% 18%, rgba(148, 137, 121, 0.15), transparent 26%), linear-gradient(to right, #948979 50%, #948979 50%)",
+          "radial-gradient(circle at 15% 18%, rgba(79, 140, 255, 0.22), transparent 28%), radial-gradient(circle at 82% 18%, rgba(139, 92, 246, 0.16), transparent 26%), linear-gradient(135deg, #060b16 0%, #0f172a 48%, #1e293b 100%)",
         backgroundAttachment: "fixed",
         backgroundRepeat: "no-repeat"
       }}
@@ -199,14 +199,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <header className="glass-panel mb-6 overflow-hidden rounded-[2rem] p-4 sm:p-6 shadow-panel">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
               <div className="space-y-4 max-w-3xl">
-                <span className="inline-flex items-center rounded-full border border-[#c4b5a0] bg-gradient-to-r from-[#e8d5c4]/40 to-[#d4c4b0]/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#3a2f24]">
+                <span className="inline-flex items-center rounded-full border border-slate-500/30 bg-slate-900/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-slate-200">
                   {pageInfo.label}
                 </span>
-                <h1 className="font-display text-3xl text-gray-900 sm:text-4xl">{pageInfo.heading}</h1>
-                <p className="max-w-2xl text-sm text-gray-700 sm:text-base">{pageInfo.description}</p>
+                <h1 className="font-display text-3xl text-white sm:text-4xl">{pageInfo.heading}</h1>
+                <p className="max-w-2xl text-sm text-slate-300 sm:text-base">{pageInfo.description}</p>
               </div>
 
-              <div className="rounded-[1.75rem] border border-gray-600/30 bg-white/80 px-6 py-6 text-gray-900 shadow-xl ring-1 ring-gray-200">
+              <div className="rounded-[1.75rem] border border-slate-400/25 bg-slate-950/75 px-6 py-6 text-slate-100 shadow-[0_24px_80px_rgba(2,8,23,0.35)] ring-1 ring-white/10">
                 <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-center">
                   <div className="flex items-center gap-4">
                     <div className="relative h-20 w-20 overflow-hidden rounded-3xl border border-gray-500/30 bg-white shadow-lg">
@@ -229,7 +229,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-gray-300/40 text-2xl font-semibold text-gray-700">
+                          <div className="flex h-full w-full items-center justify-center bg-slate-800/70 text-2xl font-semibold text-slate-100">
                             {initials}
                           </div>
                         )}
@@ -260,9 +260,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       ) : null}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Signed in</p>
-                      <p className="mt-2 text-lg font-semibold text-gray-900">{user?.fullName}</p>
-                      <p className="truncate text-sm text-gray-600">{user?.email}</p>
+                      <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Signed in</p>
+                      <p className="mt-2 text-lg font-semibold text-white">{user?.fullName}</p>
+                      <p className="truncate text-sm text-slate-300">{user?.email}</p>
                     </div>
                   </div>
 
@@ -291,8 +291,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={({ isActive }) =>
                     `rounded-full px-4 py-2 text-sm font-medium transition ${
                       isActive
-                        ? "bg-gradient-to-r from-[#e8d5c4] to-[#d4c4b0] text-[#3a2f24] font-semibold shadow-[0_8px_24px_rgba(148,137,121,0.25)] border border-[#c4b5a0]"
-                        : "border border-[#c4b5a0] bg-white/80 text-gray-700 hover:bg-gradient-to-r hover:from-[#f5eee5] hover:to-[#ede4d8] hover:border-[#d4c4b0]"
+                        ? "bg-gradient-to-r from-[#4f8cff] to-[#8b5cf6] text-white font-semibold shadow-[0_10px_28px_rgba(79,140,255,0.28)] border border-transparent"
+                        : "border border-slate-600/40 bg-slate-950/70 text-slate-200 hover:bg-slate-900/85 hover:border-slate-500/50"
                     }`
                   }
                 >

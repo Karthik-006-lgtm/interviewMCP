@@ -5,16 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --color-text-primary: #2c2416;
-  --color-text-secondary: #4a3f2f;
-  --color-text-tertiary: #6b5d47;
-  --color-text-muted: #8a7a63;
-  --color-text-light: #a89b84;
-  --color-accent-primary: #6b4423;
-  --color-accent-secondary: #8b5a2b;
-  --color-accent-emerald: #047857;
-  --color-accent-teal: #0d9488;
-  --color-accent-cyan: #0891b2;
+  --color-text-primary: #f8fbff;
+  --color-text-secondary: #dbe7f8;
+  --color-text-tertiary: #b8c9e2;
+  --color-text-muted: #8da0bc;
+  --color-text-light: #ecf4ff;
+  --color-accent-primary: #4f8cff;
+  --color-accent-secondary: #8b5cf6;
+  --color-accent-emerald: #2dd4bf;
+  --color-accent-teal: #38bdf8;
+  --color-accent-cyan: #5eead4;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   font-size: 16px;
   line-height: 1.6;
@@ -34,7 +34,10 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--color-text-primary);
-  background: transparent;
+  background:
+    radial-gradient(circle at top left, rgba(79, 140, 255, 0.24), transparent 34%),
+    radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.2), transparent 28%),
+    linear-gradient(135deg, #060b16 0%, #0f172a 48%, #1e293b 100%);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -60,33 +63,33 @@ a {
 .workspace-theme .glass-panel {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(223, 208, 184, 0.95), rgba(223, 208, 184, 0.98));
-  border: 1px solid rgba(148, 137, 121, 0.3);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.93), rgba(9, 14, 26, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.24);
   backdrop-filter: blur(20px);
   box-shadow:
-    0 30px 90px rgba(148, 137, 121, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 30px 90px rgba(2, 8, 23, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
   color: var(--color-text-primary);
 }
 
 .workspace-theme .glass-panel:hover {
-  border-color: rgba(148, 137, 121, 0.5);
+  border-color: rgba(79, 140, 255, 0.4);
   box-shadow:
-    0 34px 100px rgba(148, 137, 121, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    0 36px 100px rgba(2, 8, 23, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .workspace-theme .app-surface {
-  background: rgba(223, 208, 184, 0.85);
-  border: 1px solid rgba(148, 137, 121, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: rgba(15, 23, 42, 0.76);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   color: var(--color-text-secondary);
 }
 
 .workspace-theme .app-surface-strong {
-  background: rgba(223, 208, 184, 0.95);
-  border: 1px solid rgba(148, 137, 121, 0.4);
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(79, 140, 255, 0.2);
   color: var(--color-text-primary);
 }
 
@@ -97,67 +100,67 @@ a {
 }
 
 .workspace-theme .app-button-primary {
-  background: linear-gradient(135deg, #6b4423, #8b5a2b);
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
   color: #ffffff;
-  box-shadow: 0 14px 32px rgba(107, 68, 35, 0.35);
+  box-shadow: 0 14px 32px rgba(79, 140, 255, 0.28);
   font-weight: 600;
   font-size: 0.9375rem;
   letter-spacing: 0.01em;
 }
 
 .workspace-theme .app-button-primary:hover {
-  background: linear-gradient(135deg, #7d5129, #9d6a31);
+  background: linear-gradient(135deg, #5d95ff, #9b75ff);
   transform: translateY(-1px);
-  box-shadow: 0 16px 36px rgba(107, 68, 35, 0.4);
+  box-shadow: 0 16px 36px rgba(79, 140, 255, 0.34);
 }
 
 .workspace-theme .app-button-secondary {
-  background: rgba(148, 137, 121, 0.2);
+  background: rgba(15, 23, 42, 0.7);
   color: var(--color-text-primary);
-  border: 1px solid rgba(148, 137, 121, 0.4);
+  border: 1px solid rgba(148, 163, 184, 0.24);
   font-weight: 600;
   font-size: 0.9375rem;
 }
 
 .workspace-theme .app-button-secondary:hover {
-  background: rgba(148, 137, 121, 0.3);
-  color: var(--color-accent-primary);
+  background: rgba(15, 23, 42, 0.84);
+  color: var(--color-accent-cyan);
 }
 
 .workspace-theme .app-button-soft {
-  background: rgba(223, 208, 184, 0.6);
+  background: rgba(79, 140, 255, 0.12);
   color: var(--color-text-secondary);
-  border: 1px solid rgba(148, 137, 121, 0.3);
+  border: 1px solid rgba(79, 140, 255, 0.2);
   font-weight: 600;
   font-size: 0.9375rem;
 }
 
 .workspace-theme .app-button-soft:hover {
-  background: rgba(223, 208, 184, 0.8);
+  background: rgba(79, 140, 255, 0.2);
   color: var(--color-text-primary);
 }
 
 .workspace-theme .app-chip {
-  background: rgba(148, 137, 121, 0.25);
+  background: rgba(79, 140, 255, 0.12);
   color: var(--color-text-secondary);
-  border: 1px solid rgba(148, 137, 121, 0.4);
+  border: 1px solid rgba(79, 140, 255, 0.2);
   font-weight: 500;
   font-size: 0.8125rem;
   letter-spacing: 0.01em;
 }
 
 .workspace-theme .app-chip-secondary {
-  background: rgba(148, 137, 121, 0.3);
+  background: rgba(56, 189, 248, 0.14);
   color: var(--color-text-primary);
-  border: 1px solid rgba(148, 137, 121, 0.5);
+  border: 1px solid rgba(56, 189, 248, 0.24);
   font-weight: 600;
   font-size: 0.8125rem;
 }
 
 .workspace-theme .app-chip-accent {
-  background: rgba(223, 208, 184, 0.9);
-  color: var(--color-accent-primary);
-  border: 1px solid rgba(148, 137, 121, 0.5);
+  background: rgba(45, 212, 191, 0.16);
+  color: var(--color-accent-cyan);
+  border: 1px solid rgba(45, 212, 191, 0.24);
   font-weight: 700;
   font-size: 0.8125rem;
 }
@@ -333,12 +336,12 @@ a {
 .workspace-theme .text-white\/70,
 .workspace-theme .text-white\/65,
 .workspace-theme .text-white\/50 {
-  color: var(--color-text-secondary) !important;
+  color: var(--color-text-tertiary) !important;
   font-weight: 500;
 }
 
 .workspace-theme .text-white {
-  color: var(--color-text-primary) !important;
+  color: var(--color-text-light) !important;
   font-weight: 600;
 }
 
